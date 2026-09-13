@@ -134,12 +134,10 @@ export default function FloatingActions() {
           rel="noopener noreferrer"
           className="speed-dial-item item-whatsapp"
           role="menuitem"
-          title={activeProduct ? `Chat about ${activeProduct.shortName} on WhatsApp` : "Chat on WhatsApp"}
+          title="Chat on WhatsApp"
           onClick={() => setIsOpen(false)}
         >
-          <span className="speed-dial-label">
-            {activeProduct ? `WhatsApp (${activeProduct.shortName})` : 'WhatsApp Chat'}
-          </span>
+          <span className="speed-dial-label">WhatsApp Chat</span>
           <span className="speed-dial-icon whatsapp-bg" aria-hidden="true">
             <svg
               viewBox="0 0 24 24"
@@ -157,12 +155,10 @@ export default function FloatingActions() {
           href={emailUrl}
           className="speed-dial-item item-email"
           role="menuitem"
-          title={activeProduct ? `Email inquiry for ${activeProduct.shortName}` : "Email: bentoclaytech@gmail.com"}
+          title="Email: bentoclaytech@gmail.com"
           onClick={() => setIsOpen(false)}
         >
-          <span className="speed-dial-label">
-            {activeProduct ? `Email (${activeProduct.shortName})` : 'Send Email'}
-          </span>
+          <span className="speed-dial-label">Send Email</span>
           <span className="speed-dial-icon email-bg" aria-hidden="true">
             <svg
               viewBox="0 0 24 24"
