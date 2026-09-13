@@ -2039,44 +2039,46 @@ h2 span {
 .google-rating-badge {
   display: inline-flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  margin-top: 16px;
-  padding: 10px 18px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: 12px;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 20px;
+  padding: 0;
+  background: transparent;
+  border: none;
   text-decoration: none;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: transform 0.25s ease, opacity 0.25s ease;
   cursor: pointer;
 }
 
 .google-rating-badge:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: transparent;
   transform: translateY(-2px);
+  opacity: 0.9;
 }
 
 /* "Google" colorful wordmark */
 .google-wordmark {
   display: flex;
   align-items: center;
-  font-family: 'Product Sans', 'DM Sans', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.3px;
+  font-family: 'Product Sans', 'Manrope', 'DM Sans', sans-serif;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
   line-height: 1;
 }
 
 /* 5 Gold Stars row */
 .google-stars {
   display: flex;
-  gap: 1px;
+  gap: 3px;
+  align-items: center;
 }
 
 .google-star {
   color: #FBBC05;
-  font-size: 18px;
+  font-size: 21px;
   line-height: 1;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 .mini-footer {
