@@ -60,15 +60,30 @@ export default function ApplicationsPage() {
 
           <div className="industry-grid">
             {industries.map((ind, i) => (
-              <article key={i}>
-                <span>0{i + 1 > 9 ? i + 1 : `0${i + 1}`}</span>
-                <div>
-                  <small>APPLICATION PROFILE</small>
+              <article key={i} className="industry-card">
+                <div className="industry-card-top">
+                  <div className="industry-icon-pill">
+                    <span className="ind-icon">{ind.icon || '🏭'}</span>
+                    <span className="ind-profile-tag">APPLICATION PROFILE</span>
+                  </div>
+                  <span className="industry-index">0{i + 1 > 9 ? i + 1 : `0${i + 1}`}</span>
+                </div>
+
+                <div className="industry-card-body">
                   <h3>{ind.name}</h3>
-                  <p>{ind.shortDesc}</p>
-                  <p className="industry-benefit">
-                    <strong>Key Advantage:</strong> {ind.keyBenefit}
-                  </p>
+                  <p className="industry-desc">{ind.shortDesc}</p>
+                  
+                  <div className="industry-benefit-box">
+                    <span className="benefit-icon">✨</span>
+                    <div>
+                      <strong>Key Performance Advantage:</strong>
+                      <span>{ind.keyBenefit}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="industry-card-footer">
+                  <small className="grades-label">RECOMMENDED GRADES:</small>
                   <div className="grade-badges-inline">
                     {ind.recommendedGrades.map((gId) => {
                       const p = getProductObj(gId);
@@ -77,9 +92,11 @@ export default function ApplicationsPage() {
                         <Link
                           key={gId}
                           to={`/products/${p.slug || p.id}`}
-                          className="btn-link"
+                          className="grade-pill-link"
                         >
-                          {p.shortName} ({p.form}) ↗
+                          <span>{p.shortName}</span>
+                          <small>({p.form})</small>
+                          <span className="pill-arrow">↗</span>
                         </Link>
                       );
                     })}
@@ -88,13 +105,13 @@ export default function ApplicationsPage() {
               </article>
             ))}
 
-            <article className="industry-quote">
-              <div>
-                <small>NOT SURE WHICH GRADE?</small>
-                <h3>Tell us what performance you need.</h3>
-                <p>Our Bhavnagar technical team will help align grade properties with your target process.</p>
+            <article className="industry-quote industry-card">
+              <div className="quote-badge">💡 TECHNICAL MATCHING</div>
+              <h3>Tell us what performance you need.</h3>
+              <p>Our Bhavnagar technical team will evaluate your process rheology, mesh cut, or absorption needs and formulate matching grade samples.</p>
+              <div style={{ marginTop: 'auto', paddingTop: '20px' }}>
                 <Link className="btn btn-white" to="/contact">
-                  Talk to us ↗
+                  Request Grade Advice <span>↗</span>
                 </Link>
               </div>
             </article>

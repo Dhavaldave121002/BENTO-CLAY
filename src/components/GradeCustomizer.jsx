@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 const GRADE_CUSTOMIZATION_CONFIGS = {
   'salt-gel': {
@@ -128,28 +128,193 @@ const GRADE_CUSTOMIZATION_CONFIGS = {
   }
 };
 
+// Aliases for slug and ID interoperability
+GRADE_CUSTOMIZATION_CONFIGS['flux-fine'] = GRADE_CUSTOMIZATION_CONFIGS['flux-fine-200'];
+GRADE_CUSTOMIZATION_CONFIGS['flux-fine-200-attapulgite-powder'] = GRADE_CUSTOMIZATION_CONFIGS['flux-fine-200'];
+GRADE_CUSTOMIZATION_CONFIGS['granules'] = GRADE_CUSTOMIZATION_CONFIGS['natural-granules'];
+GRADE_CUSTOMIZATION_CONFIGS['attapulgite-natural-granules-1-5mm'] = GRADE_CUSTOMIZATION_CONFIGS['natural-granules'];
+GRADE_CUSTOMIZATION_CONFIGS['salt-gel-attapulgite-powder'] = GRADE_CUSTOMIZATION_CONFIGS['salt-gel'];
+GRADE_CUSTOMIZATION_CONFIGS['api-13a-section-12-attapulgite-powder'] = GRADE_CUSTOMIZATION_CONFIGS['api-13a'];
+GRADE_CUSTOMIZATION_CONFIGS['attapulgite-natural-powder'] = GRADE_CUSTOMIZATION_CONFIGS['natural-powder'];
+GRADE_CUSTOMIZATION_CONFIGS['premium-325-attapulgite-powder'] = GRADE_CUSTOMIZATION_CONFIGS['premium-325'];
+
+const COLOR_OPTIONS = [
+  {
+    id: 'off_white',
+    label: 'Off-White / Natural White',
+    sub: 'High brightness (L* 82–88) · Paints, coatings, sealants & polymers',
+    swatchHex: '#faf7f0',
+    borderHex: '#d1c4b2',
+    code: 'OW'
+  },
+  {
+    id: 'cream_tan',
+    label: 'Cream / Light Tan',
+    sub: 'Standard mineral tone · Drilling muds, foundry flux & civil works',
+    swatchHex: '#f0e2ca',
+    borderHex: '#c5af90',
+    code: 'CT'
+  },
+  {
+    id: 'grey_tan',
+    label: 'Greyish Tan / Raw Earthy',
+    sub: 'Natural non-calcined raw tone · Industrial absorbents & cat litter',
+    swatchHex: '#cfc6b8',
+    borderHex: '#9e9482',
+    code: 'GT'
+  },
+  {
+    id: 'buff_beige',
+    label: 'Buff / Warm Beige',
+    sub: 'Natural mineral tone · Agro carriers & construction additives',
+    swatchHex: '#dfc7a2',
+    borderHex: '#b2976c',
+    code: 'BG'
+  },
+  {
+    id: 'custom_shade',
+    label: '✨ Any Custom Color / As Per Your Requirement',
+    sub: '100% Customized: We can manufacture & match any specific tone, brightness, or shade standard',
+    swatchHex: 'conic-gradient(from 0deg, #ff4d4d, #f9ca24, #6ab04c, #22a6b3, #4834d4, #be2edd, #ff4d4d)',
+    borderHex: '#b87936',
+    code: 'CUSTOM',
+    isCustom: true
+  }
+];
+
+const COLOR_PRESET_MAP = {
+  red: '#e53e3e',
+  crimson: '#c53030',
+  pink: '#ed64a6',
+  rose: '#e53e3e',
+  orange: '#dd6b20',
+  amber: '#d69e2e',
+  yellow: '#ecc94b',
+  gold: '#d4af37',
+  green: '#38a169',
+  olive: '#708238',
+  lime: '#48bb78',
+  emerald: '#2f855a',
+  blue: '#3182ce',
+  navy: '#2b6cb0',
+  cyan: '#00b5d8',
+  teal: '#319795',
+  purple: '#805ad5',
+  violet: '#6b46c1',
+  indigo: '#5a67d8',
+  brown: '#8b572a',
+  chocolate: '#5c3317',
+  tan: '#d2b48c',
+  beige: '#f5f5dc',
+  buff: '#dfc7a2',
+  cream: '#fef08a',
+  ivory: '#fffff0',
+  white: '#ffffff',
+  'off-white': '#faf7f0',
+  'off white': '#faf7f0',
+  grey: '#718096',
+  gray: '#718096',
+  black: '#1a202c',
+  dark: '#2d3748',
+  ochre: '#cc7722',
+  terracotta: '#e2725b',
+  sienna: '#a0522d'
+};
+
+const QUICK_COLOR_CHIPS = [
+  { name: 'Red', hex: '#e53e3e' },
+  { name: 'Blue', hex: '#3182ce' },
+  { name: 'Green', hex: '#38a169' },
+  { name: 'Yellow', hex: '#ecc94b' },
+  { name: 'Pure White', hex: '#ffffff' },
+  { name: 'Ivory Cream', hex: '#fffbeb' },
+  { name: 'Terracotta', hex: '#e2725b' },
+  { name: 'Olive Green', hex: '#708238' },
+  { name: 'Charcoal Dark', hex: '#2d3748' }
+];
+
+function resolveCustomSwatch(text) {
+  if (!text || !text.trim()) {
+    return {
+      background: 'conic-gradient(from 0deg, #ff4d4d, #f9ca24, #6ab04c, #22a6b3, #4834d4, #be2edd, #ff4d4d)',
+      borderColor: '#b87936'
+    };
+  }
+  const clean = text.trim().toLowerCase();
+  if (COLOR_PRESET_MAP[clean]) {
+    return { background: COLOR_PRESET_MAP[clean], borderColor: COLOR_PRESET_MAP[clean] };
+  }
+  for (const [key, val] of Object.entries(COLOR_PRESET_MAP)) {
+    if (clean.includes(key)) {
+      return { background: val, borderColor: val };
+    }
+  }
+  if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(clean)) {
+    return { background: clean, borderColor: clean };
+  }
+  if (/^(rgb|hsl)/i.test(clean)) {
+    return { background: clean, borderColor: '#888' };
+  }
+  return { background: clean, borderColor: '#b87936' };
+}
+
 const PACKAGING_OPTIONS = [
   { id: '25kg', label: '25 kg HDPE Bag', weightKg: 25, sub: 'Woven HDPE with inner PE liner' },
   { id: '50kg', label: '50 kg HDPE Bag', weightKg: 50, sub: 'Heavy-duty woven bag with liner' },
   { id: '1000kg', label: '1000 kg Jumbo Sack', weightKg: 1000, sub: '1 MT Bulk FIBC bag with loops' }
 ];
 
+const EXPORT_COUNTRIES = [
+  'India (Domestic)',
+  'United Arab Emirates (UAE)',
+  'Saudi Arabia (KSA)',
+  'Oman',
+  'Qatar',
+  'Kuwait',
+  'Bahrain',
+  'United States (USA)',
+  'United Kingdom (UK)',
+  'Germany',
+  'Netherlands',
+  'Italy',
+  'Spain',
+  'Singapore',
+  'Malaysia',
+  'Indonesia',
+  'Vietnam',
+  'Thailand',
+  'Australia',
+  'Egypt',
+  'South Africa',
+  'Kenya',
+  'Nigeria',
+  'Brazil',
+  'Other Global Destination'
+];
+
 const QUANTITY_OPTIONS = [
-  { id: 'sample', label: 'Lab Sample Evaluation (25 kg)', mt: 0.025, note: 'Air courier sample with COA' },
-  { id: 'trial', label: 'Pilot Plant Trial (2 MT)', mt: 2, note: 'Ideal for formulation validation' },
-  { id: 'fcl20', label: '1 x 20ft FCL (~20 MT)', mt: 20, note: 'Full container maritime export' },
-  { id: 'annual', label: 'Annual Bulk Contract (50+ MT)', mt: 50, note: 'Scheduled monthly shipments' }
+  { id: 'sample', label: 'Lab Evaluation Sample (25 kg)', mt: 0.025, note: 'Air courier express sample with COA batch test report' },
+  { id: 'trial', label: 'Pilot Plant Trial Batch (2 MT)', mt: 2, note: 'Ideal for industrial formulation & production validation' },
+  { id: 'fcl20', label: '1 x 20ft FCL Container (~20 MT)', mt: 20, note: 'Standard full container load for maritime export' },
+  { id: 'multi_fcl', label: 'Multi-Container / Bulk Order (40–100 MT)', mt: 60, note: '2 to 5 FCL containers with scheduled plant dispatches' },
+  { id: 'custom_qty', label: '✨ Custom Quantity / Container Count (Specify Exact MT / FCLs)', mt: null, note: 'Enter your exact Metric Tons or Number of 20ft Containers' }
 ];
 
 export default function GradeCustomizer({ product }) {
-  const config = GRADE_CUSTOMIZATION_CONFIGS[product.id] || GRADE_CUSTOMIZATION_CONFIGS['premium-325'];
+  const config =
+    (product && (GRADE_CUSTOMIZATION_CONFIGS[product.id] || GRADE_CUSTOMIZATION_CONFIGS[product.slug])) ||
+    GRADE_CUSTOMIZATION_CONFIGS['premium-325'];
 
   const [mesh, setMesh] = useState(config.defaultMesh);
   const [visc, setVisc] = useState(config.defaultVisc);
   const [moisture, setMoisture] = useState(config.defaultMoisture);
+  const [color, setColor] = useState('off_white');
+  const [customColorText, setCustomColorText] = useState('');
   const [packaging, setPackaging] = useState('25kg');
   const [palletized, setPalletized] = useState(true);
   const [qty, setQty] = useState('fcl20');
+  const [customQtyValue, setCustomQtyValue] = useState('20');
+  const [customUnit, setCustomUnit] = useState('mt'); // 'mt' or 'fcl'
 
   // Contact form state
   const [contact, setContact] = useState({
@@ -157,6 +322,7 @@ export default function GradeCustomizer({ product }) {
     company: '',
     email: '',
     phone: '',
+    country: 'India (Domestic)',
     destination: '',
     notes: ''
   });
@@ -168,18 +334,33 @@ export default function GradeCustomizer({ product }) {
   const currentMesh = config.meshOptions.find(m => m.id === mesh) || config.meshOptions[0];
   const currentVisc = config.viscOptions.find(v => v.id === visc) || config.viscOptions[0];
   const currentMoisture = config.moistureOptions.find(m => m.id === moisture) || config.moistureOptions[0];
+  const currentColor = COLOR_OPTIONS.find(c => c.id === color) || COLOR_OPTIONS[0];
   const currentPackaging = PACKAGING_OPTIONS.find(p => p.id === packaging) || PACKAGING_OPTIONS[0];
   const currentQty = QUANTITY_OPTIONS.find(q => q.id === qty) || QUANTITY_OPTIONS[2];
 
+  // Dynamic custom color resolution
+  const customResolved = useMemo(() => {
+    return resolveCustomSwatch(customColorText);
+  }, [customColorText]);
+
+  // Effective Metric Tons calculation
+  const effectiveMt = useMemo(() => {
+    if (qty !== 'custom_qty') return currentQty.mt;
+    const val = parseFloat(customQtyValue);
+    if (isNaN(val) || val <= 0) return 20;
+    return customUnit === 'fcl' ? val * 20 : val;
+  }, [qty, currentQty, customQtyValue, customUnit]);
+
   // Automated packaging calculation
-  const totalBags = Math.round((currentQty.mt * 1000) / currentPackaging.weightKg);
+  const totalBags = Math.round((effectiveMt * 1000) / currentPackaging.weightKg);
   const bagsPerPallet = currentPackaging.weightKg === 25 ? 40 : currentPackaging.weightKg === 50 ? 20 : 1;
   const totalPallets = Math.ceil(totalBags / bagsPerPallet);
+  const totalContainers = (effectiveMt / 20).toFixed(1);
 
   // Generated Recipe Spec Code
   const cleanMeshCode = mesh.toUpperCase().replace('_', '-');
-  const cleanViscCode = visc.toUpperCase().replace('_', '-');
-  const specCode = `BC-${config.codePrefix}-${cleanMeshCode}-${currentPackaging.weightKg}KG`;
+  const colorSpecPart = color === 'custom_shade' ? (customColorText ? `CLR-${customColorText.trim().toUpperCase().replace(/\s+/g, '').slice(0, 8)}` : 'CUSTOM-CLR') : currentColor.code;
+  const specCode = `BC-${config.codePrefix}-${cleanMeshCode}-${colorSpecPart}-${currentPackaging.weightKg}KG`;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -187,6 +368,14 @@ export default function GradeCustomizer({ product }) {
   };
 
   const getStructuredSpecText = () => {
+    const colorDisplay = color === 'custom_shade'
+      ? `Custom Client Shade (${customColorText || 'Any Custom Shade As Per Requirement'})`
+      : currentColor.label;
+
+    const volumeDisplay = qty === 'custom_qty'
+      ? `Custom Order: ${effectiveMt} MT (~${totalContainers} x 20ft FCL Containers)`
+      : `${currentQty.label} (${effectiveMt} MT)`;
+
     return (
       `*CUSTOM ${product.name.toUpperCase()} SPECIFICATION*\n` +
       `-----------------------------------------\n` +
@@ -195,18 +384,21 @@ export default function GradeCustomizer({ product }) {
       `*Particle Size / Mesh:* ${currentMesh.label} (${currentMesh.sub})\n` +
       `*Target Viscosity / Rheology:* ${currentVisc.label}\n` +
       `*Moisture Specification:* ${currentMoisture.label}\n` +
-      `*Packaging:* ${currentPackaging.label} (${palletized ? 'Palletized & Shrink-wrapped' : 'Loose Bags'})\n` +
-      `*Volume Needed:* ${currentQty.label} (${totalBags} bags / ${totalPallets} pallets)\n` +
+      `*Target Colour / Shade:* ${colorDisplay} (Any custom color available)\n` +
+      `*Packaging:* ${currentPackaging.label} (${palletized ? 'Palletized & Stretch-wrapped' : 'Loose Bags'})\n` +
+      `*Volume Needed:* ${volumeDisplay}\n` +
+      `*Calculated Units:* ${totalBags.toLocaleString()} Bags / ${totalPallets} Pallets / ~${totalContainers} FCLs\n` +
       `-----------------------------------------\n` +
-      `*Inquirer Details:*\n` +
+      `*Inquirer & Delivery Details:*\n` +
       `• Name: ${contact.name || 'Not provided'}\n` +
       `• Company: ${contact.company || 'Not provided'}\n` +
       `• Email: ${contact.email || 'Not provided'}\n` +
       `• Phone: ${contact.phone || 'Not provided'}\n` +
+      `• Destination Country: ${contact.country || 'India'}\n` +
       `• Discharge Port / City: ${contact.destination || 'Not provided'}\n` +
       (contact.notes ? `• Specific Instructions: ${contact.notes}\n` : '') +
       `-----------------------------------------\n` +
-      `Sent from Bentoclay Claytech ${product.shortName} Product Page`
+      `Sent from Bentoclay Claytech ${product.shortName} Spec Builder`
     );
   };
 
@@ -218,7 +410,7 @@ export default function GradeCustomizer({ product }) {
       setIsSubmitting(false);
       setSubmitted(true);
 
-      const subject = encodeURIComponent(`Custom ${product.shortName} Spec Quotation: ${specCode} - ${contact.company || contact.name}`);
+      const subject = encodeURIComponent(`Custom ${product.shortName} Spec Quotation (${effectiveMt} MT): ${specCode} - ${contact.company || contact.name}`);
       const body = encodeURIComponent(getStructuredSpecText());
       window.location.href = `mailto:bentoclayclaytech@gmail.com?subject=${subject}&body=${body}`;
     }, 500);
@@ -243,7 +435,7 @@ export default function GradeCustomizer({ product }) {
             Customize <em>{product.name}</em>
           </h2>
           <p>
-            Configure particle fineness, target rheology, moisture control, and packaging for <strong>{product.shortName}</strong>. Our Bhavnagar plant mills and controls batches to your exact formulation target.
+            Configure particle fineness, target rheology, moisture control, natural mineral shade, and packaging for <strong>{product.shortName}</strong>. Our Bhavnagar plant mills and controls batches to your exact formulation target.
           </p>
         </div>
 
@@ -336,10 +528,118 @@ export default function GradeCustomizer({ product }) {
               </div>
             </div>
 
-            {/* 4. Packaging & Palletization */}
+            {/* 4. Mineral Colour & Shade Customization */}
             <div className="config-block">
               <div className="config-block-title">
                 <span className="step-tag">04</span>
+                <div>
+                  <h4>Mineral Colour & Shade Customization</h4>
+                  <small>Standard natural tones or 100% custom shade matching</small>
+                </div>
+              </div>
+
+              {/* Informational banner about full color customization */}
+              <div className="color-customization-callout">
+                <span className="callout-icon">🎨</span>
+                <div className="callout-text">
+                  <strong>Any Custom Color / Shade Available:</strong>
+                  <span>Bentoclay can manufacture and blend attapulgite in <em>any required tone, brightness level, or color standard</em> as per your exact formulation or client sample.</span>
+                </div>
+              </div>
+
+              <div className="config-options-stack">
+                {COLOR_OPTIONS.map((c) => {
+                  const isCustomOpt = c.id === 'custom_shade';
+                  const swatchBg = isCustomOpt && customColorText.trim() ? customResolved.background : c.swatchHex;
+                  const swatchBorder = isCustomOpt && customColorText.trim() ? customResolved.borderColor : c.borderHex;
+
+                  return (
+                    <label
+                      key={c.id}
+                      className={`grade-radio-row color-selection-row ${color === c.id ? 'active' : ''}`}
+                      onClick={() => setColor(c.id)}
+                    >
+                      <input
+                        type="radio"
+                        name={`color-${product.id}`}
+                        value={c.id}
+                        checked={color === c.id}
+                        onChange={() => setColor(c.id)}
+                      />
+                      <div
+                        className="color-swatch-badge"
+                        style={{ background: swatchBg, borderColor: swatchBorder }}
+                        title={c.label}
+                      />
+                      <div className="radio-text-wrap">
+                        <strong>{c.label}</strong>
+                        <span>{c.sub}</span>
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+
+              {color === 'custom_shade' && (
+                <div className="custom-color-input-wrapper">
+                  <div className="custom-color-header-row">
+                    <label htmlFor={`custom-shade-${product.id}`}>
+                      <strong>Specify Desired Color / Tone / Shade Standard:</strong>
+                    </label>
+                    <div className="live-color-indicator-badge">
+                      <span
+                        className="live-indicator-dot"
+                        style={{ background: customResolved.background, borderColor: customResolved.borderColor }}
+                      />
+                      <span>Live Match</span>
+                    </div>
+                  </div>
+
+                  <div className="custom-color-field-row">
+                    <input
+                      id={`custom-shade-${product.id}`}
+                      type="text"
+                      className="form-control custom-shade-field"
+                      placeholder="Type any color (e.g. Red, Blue, Green, Yellow, Terracotta, Ivory, #e53e3e)..."
+                      value={customColorText}
+                      onChange={(e) => setCustomColorText(e.target.value)}
+                    />
+                    <div className="color-picker-tool-wrap" title="Click to pick custom color">
+                      <input
+                        type="color"
+                        className="native-color-picker-input"
+                        value={customResolved.background.startsWith('#') ? customResolved.background : '#e53e3e'}
+                        onChange={(e) => setCustomColorText(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="quick-color-chips-row">
+                    <span className="chips-title">Quick Presets:</span>
+                    <div className="chips-list">
+                      {QUICK_COLOR_CHIPS.map((chip) => (
+                        <button
+                          key={chip.name}
+                          type="button"
+                          className="color-chip-btn"
+                          onClick={() => setCustomColorText(chip.name)}
+                          title={`Select ${chip.name}`}
+                        >
+                          <span className="chip-dot" style={{ background: chip.hex }} />
+                          <span>{chip.name}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <small className="field-hint">💡 Color circle in both the form and recipe card updates automatically in real-time as you type or pick a color.</small>
+                </div>
+              )}
+            </div>
+
+            {/* 5. Packaging & Palletization */}
+            <div className="config-block">
+              <div className="config-block-title">
+                <span className="step-tag">05</span>
                 <div>
                   <h4>Export Packaging & Palletization</h4>
                   <small>Multi-modal export shipping from Mundra / Pipavav Port</small>
@@ -372,10 +672,10 @@ export default function GradeCustomizer({ product }) {
               </div>
             </div>
 
-            {/* 5. Required Volume */}
+            {/* 6. Required Volume */}
             <div className="config-block">
               <div className="config-block-title">
-                <span className="step-tag">05</span>
+                <span className="step-tag">06</span>
                 <div>
                   <h4>Required Trial / Batch Volume</h4>
                   <small>Dispatched from Bhavnagar manufacturing facility</small>
@@ -401,6 +701,45 @@ export default function GradeCustomizer({ product }) {
                   </label>
                 ))}
               </div>
+
+              {qty === 'custom_qty' && (
+                <div className="custom-qty-input-box">
+                  <label htmlFor={`custom-qty-input-${product.id}`}>
+                    <strong>Specify Required Volume / Container Count:</strong>
+                  </label>
+                  <div className="custom-qty-row">
+                    <input
+                      id={`custom-qty-input-${product.id}`}
+                      type="number"
+                      min="0.1"
+                      step="any"
+                      className="form-control qty-number-field"
+                      placeholder={customUnit === 'mt' ? 'e.g. 40 (Metric Tons)' : 'e.g. 2 (Containers)'}
+                      value={customQtyValue}
+                      onChange={(e) => setCustomQtyValue(e.target.value)}
+                    />
+                    <div className="unit-toggle-pill">
+                      <button
+                        type="button"
+                        className={`unit-pill-btn ${customUnit === 'mt' ? 'active' : ''}`}
+                        onClick={() => setCustomUnit('mt')}
+                      >
+                        Metric Tons (MT)
+                      </button>
+                      <button
+                        type="button"
+                        className={`unit-pill-btn ${customUnit === 'fcl' ? 'active' : ''}`}
+                        onClick={() => setCustomUnit('fcl')}
+                      >
+                        20ft FCL Containers
+                      </button>
+                    </div>
+                  </div>
+                  <div className="custom-calc-preview">
+                    💡 <b>Calculated Volume:</b> {effectiveMt} MT = <b>{totalBags.toLocaleString()}</b> Bags ({currentPackaging.weightKg}kg) · <b>{totalPallets}</b> Pallets · ~<b>{totalContainers}</b> x 20ft FCL Containers
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -440,15 +779,33 @@ export default function GradeCustomizer({ product }) {
                   <strong>{currentMoisture.label}</strong>
                 </div>
                 <div className="summary-cell">
+                  <small>MINERAL SHADE</small>
+                  <div className="summary-color-preview">
+                    <span
+                      className="swatch-inline-dot"
+                      style={
+                        color === 'custom_shade'
+                          ? { background: customResolved.background, borderColor: customResolved.borderColor }
+                          : { background: currentColor.swatchHex, borderColor: currentColor.borderHex }
+                      }
+                    />
+                    <strong>
+                      {color === 'custom_shade'
+                        ? (customColorText ? `Custom (${customColorText.slice(0, 16)})` : 'Custom On-Demand')
+                        : currentColor.label.split(' / ')[0]}
+                    </strong>
+                  </div>
+                </div>
+                <div className="summary-cell" style={{ gridColumn: 'span 2' }}>
                   <small>PACKAGING</small>
-                  <strong>{currentPackaging.label}</strong>
+                  <strong>{currentPackaging.label} {palletized ? '(Palletized)' : ''}</strong>
                 </div>
               </div>
 
               {/* Packaging Breakdown Math */}
               <div className="spec-math-strip">
                 <div className="math-col">
-                  <span className="math-val">{totalBags}</span>
+                  <span className="math-val">{totalBags.toLocaleString()}</span>
                   <span className="math-lbl">Total Bags</span>
                 </div>
                 <div className="math-col">
@@ -456,7 +813,11 @@ export default function GradeCustomizer({ product }) {
                   <span className="math-lbl">Pallets</span>
                 </div>
                 <div className="math-col">
-                  <span className="math-val">{currentQty.mt} MT</span>
+                  <span className="math-val">{totalContainers}</span>
+                  <span className="math-lbl">20ft FCLs</span>
+                </div>
+                <div className="math-col">
+                  <span className="math-val">{effectiveMt} MT</span>
                   <span className="math-lbl">Net Weight</span>
                 </div>
               </div>
@@ -468,7 +829,7 @@ export default function GradeCustomizer({ product }) {
                     <div className="success-check">✓</div>
                     <h4>Inquiry Dispatched!</h4>
                     <p>
-                      Your custom specification <b>{specCode}</b> has been received. Our Bhavnagar laboratory engineer will review viscosity and packaging requirements and reply within 24 hours.
+                      Your custom specification <b>{specCode}</b> for <b>{effectiveMt} MT</b> has been received. Our Bhavnagar laboratory engineer will review viscosity and packaging requirements and reply within 24 hours.
                     </p>
                   </div>
                 ) : (
@@ -516,13 +877,27 @@ export default function GradeCustomizer({ product }) {
                       />
                     </div>
 
-                    <div className="form-row-single">
+                    <div className="form-row-split">
+                      <select
+                        name="country"
+                        value={contact.country}
+                        onChange={handleInputChange}
+                        required
+                        className="form-control form-select-country"
+                      >
+                        {EXPORT_COUNTRIES.map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
+                        ))}
+                      </select>
                       <input
                         type="text"
                         name="destination"
-                        placeholder="Delivery Destination / Discharge Port (e.g. Mundra, Dubai)"
+                        placeholder="Discharge Port / City *"
                         value={contact.destination}
                         onChange={handleInputChange}
+                        required
                       />
                     </div>
 
@@ -541,7 +916,7 @@ export default function GradeCustomizer({ product }) {
                       className="btn btn-primary btn-full-submit"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? 'Sending Spec...' : 'Request Technical Quote ↗'}
+                      {isSubmitting ? 'Sending Spec...' : `Request Technical Quote (${effectiveMt} MT) ↗`}
                     </button>
 
                     <div className="instant-whatsapp-wrap">

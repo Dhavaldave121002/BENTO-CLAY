@@ -1,17 +1,50 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+
+const VIDEO_LIST = [
+  {
+    id: 'video2',
+    stage: 'STAGE 01',
+    pill: 'Raw Sourcing & Sorting',
+    title: 'Mineral Sourcing & Sorting',
+    desc: 'Our field team manages careful ore selection, grading, and uniform crushing before entering the processing circuit.',
+    src: '/videos/video2.mp4',
+    altSrc: '/video2.mp4',
+    isFeatured: false,
+    nextId: 'video1',
+    prevId: 'video3'
+  },
+  {
+    id: 'video1',
+    stage: 'STAGE 02',
+    pill: 'Primary Processing & QC',
+    title: 'Active Plant Operations & Dedicated Team',
+    desc: 'Continuous thermal activation, live parameter testing, and real-time coordination by our technical team to guarantee standard batch rheology.',
+    src: '/videos/video1.mp4',
+    altSrc: '/video1.mp4',
+    isFeatured: true,
+    nextId: 'video3',
+    prevId: 'video2'
+  },
+  {
+    id: 'video3',
+    stage: 'STAGE 03',
+    pill: 'Milling & Dispatch',
+    title: 'Milling, Packaging & Dispatch',
+    desc: 'Controlled micronizing to exact mesh sizes, followed by mechanized moisture-proof HDPE bagging and export containerization.',
+    src: '/videos/video3.mp4',
+    altSrc: '/video3.mp4',
+    isFeatured: false,
+    nextId: 'video2',
+    prevId: 'video1'
+  }
+];
 
 export default function TeamVideoSection() {
-  const [playingState, setPlayingState] = useState({
-    video2: false,
-    video1: false,
-    video3: false
-  });
-
-  const [mutedState, setMutedState] = useState({
-    video2: true,
-    video1: true,
-    video3: true
-  });
+  const [activeVideoId, setActiveVideoId] = useState('video1'); // Start with Center Featured Video
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+  const [progress, setProgress] = useState({ video1: 0, video2: 0, video3: 0 });
+  const [activeVideoModal, setActiveVideoModal] = useState(null);
 
   const videoRefs = {
     video2: useRef(null),
@@ -19,33 +52,130 @@ export default function TeamVideoSection() {
     video3: useRef(null)
   };
 
-  const handleStartPlay = (id) => {
-    const video = videoRefs[id]?.current;
-    if (!video) return;
-
-    video.play().then(() => {
-      setPlayingState(prev => ({ ...prev, [id]: true }));
-    }).catch(err => {
-      console.warn('Playback error:', err);
-    });
+  const cardRefs = {
+    video2: useRef(null),
+    video1: useRef(null),
+    video3: useRef(null)
   };
 
+  const sliderRef = useRef(null);
+  const sectionRef = useRef(null);
+
+  // Synchronize playback: only activeVideoId plays
+  useEffect(() => {
+    Object.keys(videoRefs).forEach((id) => {
+      const vid = videoRefs[id]?.current;
+      if (!vid) return;
+
+      if (id === activeVideoId && isPlaying) {
+        vid.muted = isMuted;
+        vid.play().catch(() => {
+          vid.muted = true;
+          setIsMuted(true);
+          vid.play().catch((e) => console.warn(e));
+        });
+      } else {
+        vid.pause();
+        vid.currentTime = 0;
+        setProgress((prev) => ({ ...prev, [id]: 0 }));
+      }
+    });
+  }, [activeVideoId, isPlaying]);
+
+  // Handle Mute changes
+  useEffect(() => {
+    const vid = videoRefs[activeVideoId]?.current;
+    if (vid) {
+      vid.muted = isMuted;
+    }
+  }, [isMuted, activeVideoId]);
+
+  // Handle Video Time Update for Progress Bar
+  const handleTimeUpdate = (id) => {
+    const vid = videoRefs[id]?.current;
+    if (!vid || !vid.duration) return;
+    const currentProg = (vid.currentTime / vid.duration) * 100;
+    setProgress((prev) => ({ ...prev, [id]: currentProg }));
+  };
+
+  // Auto-advance to next video when current ends
+  const handleVideoEnded = (currentId) => {
+    const currentItem = VIDEO_LIST.find((v) => v.id === currentId);
+    if (currentItem && currentItem.nextId) {
+      scrollToCard(currentItem.nextId);
+    }
+  };
+
+  // Smooth slide to selected card
+  const scrollToCard = (id) => {
+    setActiveVideoId(id);
+    setIsPlaying(true);
+    const cardEl = cardRefs[id]?.current;
+    if (cardEl && sliderRef.current) {
+      cardEl.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  };
+
+  // Next / Prev slide handlers
+  const handleNext = () => {
+    const current = VIDEO_LIST.find((v) => v.id === activeVideoId);
+    if (current?.nextId) scrollToCard(current.nextId);
+  };
+
+  const handlePrev = () => {
+    const current = VIDEO_LIST.find((v) => v.id === activeVideoId);
+    if (current?.prevId) scrollToCard(current.prevId);
+  };
+
+  // User click on card or play button
+  const handleCardClick = (id) => {
+    if (activeVideoId === id) {
+      const vid = videoRefs[id]?.current;
+      if (vid) {
+        if (vid.paused) {
+          vid.play().then(() => setIsPlaying(true)).catch((e) => console.warn(e));
+        } else {
+          vid.pause();
+          setIsPlaying(false);
+        }
+      }
+    } else {
+      scrollToCard(id);
+    }
+  };
+
+  // Sound toggle button click
   const handleToggleMute = (e, id) => {
     e.stopPropagation();
-    const video = videoRefs[id]?.current;
-    if (!video) return;
+    const vid = videoRefs[id]?.current;
+    if (!vid) return;
 
-    const newMuted = !video.muted;
-    video.muted = newMuted;
-    setMutedState(prev => ({ ...prev, [id]: newMuted }));
+    if (activeVideoId !== id) {
+      scrollToCard(id);
+    }
+
+    const nextMute = !isMuted;
+    setIsMuted(nextMute);
+    vid.muted = nextMute;
+    vid.volume = 1.0;
+
+    if (vid.paused) {
+      vid.play().then(() => setIsPlaying(true)).catch((err) => console.warn(err));
+    }
   };
 
-  const handleVideoEnded = (id) => {
-    setPlayingState(prev => ({ ...prev, [id]: false }));
+  // Expand modal
+  const handleExpand = (e, src, title) => {
+    e.stopPropagation();
+    setActiveVideoModal({ src, title });
   };
 
   return (
-    <section className="team-video-section section-pad" id="team-operations">
+    <section className="team-video-section section-pad" id="team-operations" ref={sectionRef}>
       <div className="container">
         {/* Section Header */}
         <div className="section-head reveal-on-scroll">
@@ -57,237 +187,203 @@ export default function TeamVideoSection() {
             </h2>
           </div>
           <p>
-            Experience our manufacturing prowess firsthand. From raw attapulgite mineral handling to high-precision processing and export packaging, see our dedicated team delivering consistent quality at every step.
+            Experience our manufacturing prowess firsthand in 9:16 vertical reels format. Watch our sequential operations from mining extraction to high-precision milling and automated export packaging.
           </p>
         </div>
 
-        {/* 3-Video Showcase Grid */}
-        <div className="team-video-grid reveal-on-scroll">
-          
-          {/* Left Video: video2.mp4 */}
-          <div className="team-video-card side-card">
-            <div className="video-wrapper">
-              <video
-                ref={videoRefs.video2}
-                src="/videos/video2.mp4"
-                playsInline
-                preload="metadata"
-                controls
-                muted={mutedState.video2}
-                onPlay={() => setPlayingState(prev => ({ ...prev, video2: true }))}
-                onPause={() => setPlayingState(prev => ({ ...prev, video2: false }))}
-                onEnded={() => handleVideoEnded('video2')}
-              >
-                <source src="/videos/video2.mp4" type="video/mp4" />
-                <source src="/video2.mp4" type="video/mp4" />
-                Your browser does not support HTML5 video.
-              </video>
-
-              {/* Floating Quick Action Overlay */}
-              {!playingState.video2 && (
-                <div
-                  className="video-play-overlay"
-                  onClick={() => handleStartPlay('video2')}
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Play Mineral Sourcing & Sorting Video"
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleStartPlay('video2'); }}
-                >
-                  <div className="play-pulse-circle">
-                    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-                      <polygon points="5,3 19,12 5,21" />
-                    </svg>
-                  </div>
-                  <span className="play-overlay-text">Watch Video</span>
-                </div>
-              )}
-
+        {/* Carousel Slider Controls for Mobile */}
+        <div className="video-slider-controls">
+          <button
+            type="button"
+            className="video-nav-arrow arrow-prev"
+            onClick={handlePrev}
+            aria-label="Previous Video"
+            title="Previous Video"
+          >
+            ‹
+          </button>
+          <div className="video-dots-row">
+            {VIDEO_LIST.map((item, idx) => (
               <button
+                key={item.id}
                 type="button"
-                className="video-audio-toggle"
-                onClick={(e) => handleToggleMute(e, 'video2')}
-                aria-label={mutedState.video2 ? "Unmute audio" : "Mute audio"}
-                title={mutedState.video2 ? "Click to unmute" : "Click to mute"}
+                className={`video-dot-btn ${activeVideoId === item.id ? 'active' : ''}`}
+                onClick={() => scrollToCard(item.id)}
+                aria-label={`Slide to Stage ${idx + 1}`}
               >
-                {mutedState.video2 ? (
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="1" y1="1" x2="23" y2="23" />
-                    <polygon points="9 9 9 15 13 15 17 19 17 5 13 9 9 9" fill="currentColor" stroke="none" />
-                    <path d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                  </svg>
-                ) : (
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polygon points="9 9 9 15 13 15 17 19 17 5 13 9 9 9" fill="currentColor" stroke="none" />
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  </svg>
-                )}
+                <span className="dot-num">{idx + 1}</span>
+                <span className="dot-label">{item.pill}</span>
               </button>
-
-              <span className="video-step-tag">STAGE 01</span>
-            </div>
-
-            <div className="video-card-info">
-              <div className="video-card-header">
-                <span className="video-pill-badge">Raw Feed Prep</span>
-                <h3>Mineral Sourcing & Sorting</h3>
-              </div>
-              <p>
-                Our field team manages careful ore selection, grading, and uniform crushing before entering the processing circuit.
-              </p>
-            </div>
+            ))}
           </div>
+          <button
+            type="button"
+            className="video-nav-arrow arrow-next"
+            onClick={handleNext}
+            aria-label="Next Video"
+            title="Next Video"
+          >
+            ›
+          </button>
+        </div>
 
-          {/* Center Video: video1.mp4 (Spotlight Featured) */}
-          <div className="team-video-card center-card featured-card">
-            <div className="featured-crown-badge">
-              <span className="star-icon">★</span>
-              <span>CORE OPERATIONS & TEAM</span>
-            </div>
+        {/* 9:16 Video Grid / Mobile Horizontal Swipe Carousel */}
+        <div className="team-video-grid reveal-on-scroll" ref={sliderRef}>
+          {VIDEO_LIST.map((item) => {
+            const isActive = activeVideoId === item.id;
+            const isCurrentPlaying = isActive && isPlaying;
 
-            <div className="video-wrapper main-wrapper">
-              <video
-                ref={videoRefs.video1}
-                src="/videos/video1.mp4"
-                playsInline
-                preload="metadata"
-                controls
-                muted={mutedState.video1}
-                onPlay={() => setPlayingState(prev => ({ ...prev, video1: true }))}
-                onPause={() => setPlayingState(prev => ({ ...prev, video1: false }))}
-                onEnded={() => handleVideoEnded('video1')}
+            return (
+              <div
+                key={item.id}
+                ref={cardRefs[item.id]}
+                className={`team-video-card ${item.isFeatured ? 'featured-card' : 'side-card'} ${
+                  isActive ? 'card-now-active' : ''
+                }`}
+                onClick={() => handleCardClick(item.id)}
               >
-                <source src="/videos/video1.mp4" type="video/mp4" />
-                <source src="/video1.mp4" type="video/mp4" />
-                Your browser does not support HTML5 video.
-              </video>
-
-              {!playingState.video1 && (
-                <div
-                  className="video-play-overlay"
-                  onClick={() => handleStartPlay('video1')}
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Play Core Team & Plant Showcase Video"
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleStartPlay('video1'); }}
-                >
-                  <div className="play-pulse-circle spotlight-pulse">
-                    <svg viewBox="0 0 24 24" width="34" height="34" fill="currentColor">
-                      <polygon points="5,3 19,12 5,21" />
-                    </svg>
+                {item.isFeatured && (
+                  <div className="featured-crown-badge">
+                    <span className="star-icon">★</span>
+                    <span>CORE OPERATIONS & TEAM</span>
                   </div>
-                  <span className="play-overlay-text spotlight-text">Play Team & Plant Showcase</span>
-                </div>
-              )}
-
-              <button
-                type="button"
-                className="video-audio-toggle"
-                onClick={(e) => handleToggleMute(e, 'video1')}
-                aria-label={mutedState.video1 ? "Unmute audio" : "Mute audio"}
-                title={mutedState.video1 ? "Click to unmute" : "Click to mute"}
-              >
-                {mutedState.video1 ? (
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="1" y1="1" x2="23" y2="23" />
-                    <polygon points="9 9 9 15 13 15 17 19 17 5 13 9 9 9" fill="currentColor" stroke="none" />
-                    <path d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                  </svg>
-                ) : (
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polygon points="9 9 9 15 13 15 17 19 17 5 13 9 9 9" fill="currentColor" stroke="none" />
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  </svg>
                 )}
-              </button>
 
-              <span className="video-step-tag spotlight-tag">MAIN SHOWCASE</span>
-            </div>
+                <div className="video-wrapper">
+                  <video
+                    ref={videoRefs[item.id]}
+                    src={item.src}
+                    playsInline
+                    preload="auto"
+                    muted={isMuted}
+                    onTimeUpdate={() => handleTimeUpdate(item.id)}
+                    onEnded={() => handleVideoEnded(item.id)}
+                    onPlay={() => {
+                      if (activeVideoId === item.id) setIsPlaying(true);
+                    }}
+                    onPause={() => {
+                      if (activeVideoId === item.id) setIsPlaying(false);
+                    }}
+                  >
+                    <source src={item.src} type="video/mp4" />
+                    <source src={item.altSrc} type="video/mp4" />
+                    Your browser does not support HTML5 video.
+                  </video>
 
-            <div className="video-card-info spotlight-info">
-              <div className="video-card-header">
-                <span className="video-pill-badge active-badge">Primary Processing</span>
-                <h3>Active Plant Operations & Dedicated Team</h3>
-              </div>
-              <p>
-                Continuous thermal activation, live parameter testing, and real-time coordination by our technical team to guarantee standard batch rheology.
-              </p>
-            </div>
-          </div>
+                  {/* Top Controls: Sound & Expand */}
+                  <div className="video-top-controls" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      type="button"
+                      className={`video-control-btn sound-btn ${!isMuted && isActive ? 'sound-active' : ''}`}
+                      onClick={(e) => handleToggleMute(e, item.id)}
+                      aria-label={isMuted ? 'Turn Sound ON' : 'Turn Sound OFF'}
+                      title={isMuted ? 'Click for Sound 🔊' : 'Mute Sound 🔇'}
+                    >
+                      {!isMuted && isActive ? (
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" />
+                          <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                          <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                        </svg>
+                      ) : (
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" />
+                          <line x1="23" y1="9" x2="17" y2="15" />
+                          <line x1="17" y1="9" x2="23" y2="15" />
+                        </svg>
+                      )}
+                    </button>
 
-          {/* Right Video: video3.mp4 */}
-          <div className="team-video-card side-card">
-            <div className="video-wrapper">
-              <video
-                ref={videoRefs.video3}
-                src="/videos/video3.mp4"
-                playsInline
-                preload="metadata"
-                controls
-                muted={mutedState.video3}
-                onPlay={() => setPlayingState(prev => ({ ...prev, video3: true }))}
-                onPause={() => setPlayingState(prev => ({ ...prev, video3: false }))}
-                onEnded={() => handleVideoEnded('video3')}
-              >
-                <source src="/videos/video3.mp4" type="video/mp4" />
-                <source src="/video3.mp4" type="video/mp4" />
-                Your browser does not support HTML5 video.
-              </video>
-
-              {!playingState.video3 && (
-                <div
-                  className="video-play-overlay"
-                  onClick={() => handleStartPlay('video3')}
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Play Milling, Packaging & Dispatch Video"
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleStartPlay('video3'); }}
-                >
-                  <div className="play-pulse-circle">
-                    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-                      <polygon points="5,3 19,12 5,21" />
-                    </svg>
+                    <button
+                      type="button"
+                      className="video-control-btn"
+                      onClick={(e) => handleExpand(e, item.src, item.title)}
+                      aria-label="Expand Fullscreen"
+                      title="Expand Video"
+                    >
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                      </svg>
+                    </button>
                   </div>
-                  <span className="play-overlay-text">Watch Video</span>
+
+                  {/* State Overlay: Active Playing indicator or Click to Play */}
+                  {!isCurrentPlaying && (
+                    <div className="video-paused-indicator">
+                      <div className={`play-pulse-circle ${item.isFeatured ? 'spotlight-pulse' : ''}`}>
+                        <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                          <polygon points="5,3 19,12 5,21" />
+                        </svg>
+                      </div>
+                      <span className="play-hint-text">
+                        {isActive ? 'Click to Resume' : 'Click to Play'}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Stage live badge */}
+                  <div className={`video-live-pill ${isActive ? 'active-pill' : ''}`}>
+                    <span className={`live-dot ${isActive ? 'dot-active' : ''}`}></span>
+                    <span>{item.stage} · {item.pill}</span>
+                  </div>
+
+                  {/* Progress Line at bottom */}
+                  <div className="video-progress-track">
+                    <div
+                      className="video-progress-bar"
+                      style={{ width: `${progress[item.id] || 0}%` }}
+                    />
+                  </div>
                 </div>
-              )}
 
-              <button
-                type="button"
-                className="video-audio-toggle"
-                onClick={(e) => handleToggleMute(e, 'video3')}
-                aria-label={mutedState.video3 ? "Unmute audio" : "Mute audio"}
-                title={mutedState.video3 ? "Click to unmute" : "Click to mute"}
-              >
-                {mutedState.video3 ? (
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="1" y1="1" x2="23" y2="23" />
-                    <polygon points="9 9 9 15 13 15 17 19 17 5 13 9 9 9" fill="currentColor" stroke="none" />
-                    <path d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                  </svg>
-                ) : (
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polygon points="9 9 9 15 13 15 17 19 17 5 13 9 9 9" fill="currentColor" stroke="none" />
-                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  </svg>
-                )}
-              </button>
-
-              <span className="video-step-tag">STAGE 03</span>
-            </div>
-
-            <div className="video-card-info">
-              <div className="video-card-header">
-                <span className="video-pill-badge">Precision Finishing</span>
-                <h3>Milling, Packaging & Dispatch</h3>
+                <div className={`video-card-info ${item.isFeatured ? 'spotlight-info' : ''}`}>
+                  <div className="video-card-header">
+                    <div className="stage-row">
+                      <span className={`video-pill-badge ${isActive ? 'active-badge' : ''}`}>
+                        {item.pill}
+                      </span>
+                      {isActive && isCurrentPlaying && (
+                        <span className="now-playing-tag">▶ NOW PLAYING</span>
+                      )}
+                    </div>
+                    <h3>{item.title}</h3>
+                  </div>
+                  <p>{item.desc}</p>
+                </div>
               </div>
-              <p>
-                Controlled micronizing to exact mesh sizes, followed by mechanized moisture-proof HDPE bagging and export containerization.
-              </p>
-            </div>
-          </div>
-
+            );
+          })}
         </div>
       </div>
+
+      {/* Lightbox / Fullscreen Modal */}
+      {activeVideoModal && (
+        <div className="video-lightbox-modal" onClick={() => setActiveVideoModal(null)}>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <div className="lightbox-header">
+              <h4>{activeVideoModal.title}</h4>
+              <button
+                type="button"
+                className="lightbox-close"
+                onClick={() => setActiveVideoModal(null)}
+                aria-label="Close Video"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="lightbox-video-wrap">
+              <video
+                src={activeVideoModal.src}
+                controls
+                autoPlay
+                playsInline
+              >
+                Your browser does not support video.
+              </video>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

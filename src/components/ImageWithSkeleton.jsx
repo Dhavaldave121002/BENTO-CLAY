@@ -26,6 +26,8 @@ export default function ImageWithSkeleton({
         ref={imgRef}
         src={src}
         alt={alt}
+        loading="lazy"
+        decoding="async"
         className={`fade-in-img ${className} ${isLoaded ? 'is-visible' : 'is-hidden'}`}
         onLoad={() => setIsLoaded(true)}
         {...props}

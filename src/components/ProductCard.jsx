@@ -8,7 +8,7 @@ export default function ProductCard({ product, index }) {
       <Link to={targetUrl} className="product-card-link-wrap" aria-label={`View ${product.name}`}>
         <div className={`product-photo product-photo-${index + 1}`}>
           <img
-            src={product.image || "/assets/product-range.jpeg"}
+            src={product.image || "/assets/product-range.webp"}
             alt={product.name}
             loading="lazy"
           />

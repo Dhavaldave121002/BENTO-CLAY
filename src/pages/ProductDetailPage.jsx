@@ -98,7 +98,7 @@ export default function ProductDetailPage() {
                   onClick={scrollToCustomizer}
                   className="btn btn-secondary btn-customize-hero"
                 >
-                  Customize this Grade ⚙
+                  Customize this Grade <span>⚙</span>
                 </button>
                 <a
                   href={`mailto:bentoclayclaytech@gmail.com?subject=PDS%20Request%3A%20${encodeURIComponent(product.name)}`}
@@ -227,13 +227,33 @@ export default function ProductDetailPage() {
                           onClick={() => setOpenFaq(isOpen ? -1 : i)}
                           aria-expanded={isOpen}
                         >
-                          <span>{faq.q}</span>
-                          <span className="faq-icon" aria-hidden="true">+</span>
+                          <span className="grade-faq-q-text">{faq.q}</span>
+                          <span className={`faq-toggle-icon grade-faq-toggle ${isOpen ? 'is-open' : ''}`} aria-hidden="true">
+                            <svg
+                              viewBox="0 0 24 24"
+                              width="15"
+                              height="15"
+                              stroke="currentColor"
+                              strokeWidth="2.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              fill="none"
+                              className="toggle-svg"
+                            >
+                              <line x1="12" y1="5" x2="12" y2="19" className="vert-line" />
+                              <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                          </span>
                         </button>
                         <div className="faq-answer-wrapper" aria-hidden={!isOpen}>
                           <div className="faq-answer-inner">
                             <div className="grade-faq-a">
-                              <p>{faq.a}</p>
+                              <div className="grade-faq-card">
+                                <div className="grade-faq-header">
+                                  <span className="grade-faq-badge">TECHNICAL SPECIFICATION ANSWER</span>
+                                </div>
+                                <p className="grade-faq-text">{faq.a}</p>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -305,7 +325,7 @@ export default function ProductDetailPage() {
       </section>
 
       {/* Interactive In-Page Customizer for this Specific Product Grade */}
-      <GradeCustomizer product={product} />
+      <GradeCustomizer key={product.id || product.slug} product={product} />
 
       {/* Related Grades Section */}
       {relatedProducts.length > 0 && (
@@ -352,7 +372,7 @@ export default function ProductDetailPage() {
             onClick={scrollToCustomizer}
             className="btn btn-white"
           >
-            Customize this Grade ⚙
+            Customize this Grade <span>⚙</span>
           </button>
         </div>
       </section>

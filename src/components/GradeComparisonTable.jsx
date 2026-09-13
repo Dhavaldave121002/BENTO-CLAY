@@ -62,12 +62,12 @@ export default function GradeComparisonTable({ onSelectProduct }) {
                     </td>
                     <td>{p.apps?.[0] || 'Industrial processing'}</td>
                     <td>25 kg HDPE with liner</td>
-                    <td>
+                    <td style={{ whiteSpace: 'nowrap' }}>
                       <Link
                         to={`/products/${p.slug || p.id}`}
                         className="btn-link"
                       >
-                        View Specs ↗
+                        <span>View Specs</span> <span className="link-arrow">↗</span>
                       </Link>
                     </td>
                   </tr>

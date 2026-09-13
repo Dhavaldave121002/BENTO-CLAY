@@ -43,63 +43,65 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-glow"></div>
-        <div className="container hero-grid">
-          <div className="hero-copy">
-            <div className="eyebrow">
-              <span></span> Attapulgite specialists · Bhavnagar, India
-            </div>
-            <h1>
-              Attapulgite engineered to the<br />
-              <em>parameter that matters.</em>
-            </h1>
-            <p>
-              Bentoclay Claytech manufactures six specialized attapulgite grades — from 35 cps salt gel for saline drilling fluids to 210 m²/g Premium 325 for paint and coatings — each controlled to a published data sheet in 25 kg HDPE packing.
-            </p>
-            <div className="hero-actions">
-              <a className="btn btn-primary" href="#products">
-                Explore the six grades <span>↓</span>
-              </a>
-              <Link className="btn btn-secondary" to="/contact">
-                Request a quote <span>↗</span>
-              </Link>
+        <div className="container">
+          <div className="hero-grid">
+            <div className="hero-copy">
+              <div className="eyebrow">
+                <span></span> Attapulgite specialists · Bhavnagar, India
+              </div>
+              <h1>
+                Attapulgite engineered to the<br />
+                <em>parameter that matters.</em>
+              </h1>
+              <p>
+                Bentoclay Claytech manufactures six specialized attapulgite grades — from 35 cps salt gel for saline drilling fluids to 210 m²/g Premium 325 for paint and coatings — each controlled to a published data sheet in 25 kg HDPE packing.
+              </p>
+              <div className="hero-actions">
+                <a className="btn btn-primary" href="#products">
+                  Explore the six grades <span>↓</span>
+                </a>
+                <Link className="btn btn-secondary" to="/contact">
+                  Request a quote <span>↗</span>
+                </Link>
+              </div>
             </div>
 
-            {/* Metric counters */}
-            <div className="hero-metrics-bar">
-              <div className="metric-item">
-                <strong><AnimatedCounter target={6} /></strong>
-                <span>Attapulgite grades</span>
+            <div className="hero-visual">
+              <div className="visual-card">
+                <img
+                  src="/assets/product-range.webp"
+                  alt="Bentoclay range of attapulgite powders and granules"
+                />
               </div>
-              <div className="metric-item">
-                <strong><AnimatedCounter target={25} suffix=" kg" /></strong>
-                <span>HDPE with liner</span>
+              <div className="floating-tag">
+                <strong>6</strong>
+                <span>Specialised<br />product grades</span>
               </div>
-              <div className="metric-item">
-                <strong><AnimatedCounter target={2} /></strong>
-                <span>Powder & granule forms</span>
-              </div>
-              <div className="metric-item">
-                <strong>1–5 mm</strong>
-                <span>Granule range</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="hero-visual">
-            <div className="visual-card">
-              <img
-                src="/assets/product-range.jpeg"
-                alt="Bentoclay range of attapulgite powders and granules"
-              />
               <div className="formula-chip">
                 <small>MINERAL COMPOSITION</small>
                 <strong>(Mg, Al)₅ Si₈ O₂₂ (OH)₄</strong>
                 <span>Rod-like / needle-like crystal habit</span>
               </div>
             </div>
-            <div className="floating-tag">
-              <strong>6</strong>
-              <span>Specialised<br />product grades</span>
+          </div>
+
+          {/* Metric counters spanning full width */}
+          <div className="hero-metrics-bar hero-metrics-full">
+            <div className="metric-item">
+              <strong><AnimatedCounter target={6} /></strong>
+              <span>Attapulgite grades</span>
+            </div>
+            <div className="metric-item">
+              <strong><AnimatedCounter target={25} suffix=" kg" /></strong>
+              <span>HDPE with liner</span>
+            </div>
+            <div className="metric-item">
+              <strong><AnimatedCounter target={2} /></strong>
+              <span>Powder & granule forms</span>
+            </div>
+            <div className="metric-item">
+              <strong>1–5 mm</strong>
+              <span>Granule range</span>
             </div>
           </div>
         </div>
@@ -299,8 +301,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FAQ Accordion */}
-      <FaqAccordion />
+      {/* FAQ Accordion (Featured 4 Questions with link to /faq) */}
+      <FaqAccordion limit={4} showFilter={false} showViewAllBtn={true} />
 
       {/* Contact CTA Section */}
       <section className="contact" id="contact">

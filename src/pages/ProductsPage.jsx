@@ -109,7 +109,7 @@ export default function ProductsPage() {
       <GradeComparisonTable onSelectProduct={setSelectedProduct} />
 
       {/* Technical FAQ */}
-      <FaqAccordion />
+      <FaqAccordion limit={4} showFilter={false} showViewAllBtn={true} />
 
       <section className="page-cta reveal-on-scroll">
         <div className="container">

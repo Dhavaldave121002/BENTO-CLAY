@@ -259,7 +259,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── FAQ (original) ───────────────────────────────────────── */}
-      <FaqAccordion />
+      <FaqAccordion limit={4} showFilter={false} showViewAllBtn={true} />
 
       {/* ── CTA (original) ───────────────────────────────────────── */}
       <section className="page-cta">

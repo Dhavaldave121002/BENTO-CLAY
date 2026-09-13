@@ -96,6 +96,14 @@ export default function Navbar() {
 
           <nav className={`nav-links ${isOpen ? 'open' : ''}`} aria-label="Main navigation">
             <NavLink
+              to="/"
+              end
+              className={({ isActive }) => (isActive ? 'active-page' : '')}
+              onClick={closeMenu}
+            >
+              Home
+            </NavLink>
+            <NavLink
               to="/products"
               className={({ isActive }) => (isActive ? 'active-page' : '')}
               onClick={closeMenu}

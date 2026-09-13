@@ -106,7 +106,7 @@ export default function WhyUsPage() {
       </section>
 
       {/* FAQ Accordion */}
-      <FaqAccordion />
+      <FaqAccordion limit={4} showFilter={false} showViewAllBtn={true} />
 
       <section className="page-cta">
         <div className="container">

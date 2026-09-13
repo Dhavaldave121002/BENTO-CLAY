@@ -14,10 +14,12 @@ import BlogDetailPage from './pages/BlogDetailPage';
 import FAQPage from './pages/FAQPage';
 import TermsConditionsPage from './pages/TermsConditionsPage';
 import FloatingActions from './components/FloatingActions';
+import PageSEO from './components/PageSEO';
 
 export default function App() {
   return (
     <Router>
+      <PageSEO />
       <ScrollToTop />
       <Navbar />
       <Routes>
