@@ -187,7 +187,7 @@ export default function TeamVideoSection() {
             </h2>
           </div>
           <p>
-            Experience our manufacturing prowess firsthand in 9:16 vertical reels format. Watch our sequential operations from mining extraction to high-precision milling and automated export packaging.
+            Experience our manufacturing prowess firsthand. Watch our sequential operations from mining extraction to high-precision milling and automated export packaging.
           </p>
         </div>
 

@@ -6937,7 +6937,7 @@ h2 span {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   overflow: hidden;
-  padding: 90px 0 100px;
+  padding: 60px 0 70px;
 }
 
 .team-video-section::before {
@@ -6954,17 +6954,17 @@ h2 span {
 
 .team-video-grid {
   display: grid;
-  grid-template-columns: 1fr 1.15fr 1fr;
-  gap: 26px;
+  grid-template-columns: 1fr 1.12fr 1fr;
+  gap: 24px;
   align-items: center;
-  max-width: 1160px;
-  margin: 36px auto 0;
+  max-width: 1100px;
+  margin: 30px auto 0;
 }
 
 .team-video-card {
   position: relative;
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 16px;
   border: 1.5px solid rgba(128, 80, 46, 0.16);
   box-shadow: 0 10px 30px rgba(56, 37, 29, 0.06);
   display: flex;
@@ -7030,14 +7030,14 @@ h2 span {
   font-size: 13px;
 }
 
-/* 9:16 Video Frame Wrapper */
+/* Balanced Proportional Video Frame Wrapper */
 .video-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 9 / 16;
-  height: auto;
+  aspect-ratio: 4 / 4.6;
+  max-height: 370px;
   background: #120c08;
-  border-radius: 16px 16px 0 0;
+  border-radius: 14px 14px 0 0;
   overflow: hidden;
 }
 
