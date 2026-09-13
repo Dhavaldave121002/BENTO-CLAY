@@ -53,7 +53,7 @@ export default function ContactPage() {
 
   const selectedProductObj = products.find((p) => p.id === formData.product);
   const activeProductName = selectedProductObj
-    ? `${selectedProductObj.name} (${selectedProductObj.shortName})`
+    ? selectedProductObj.name
     : (formData.product && formData.product !== 'Choose a product' ? formData.product : '');
 
   const handleChange = (e) => {
@@ -72,7 +72,7 @@ export default function ContactPage() {
 
       // Construct mailto link as direct option
       const selectedProd = products.find((p) => p.id === formData.product);
-      const productName = selectedProd ? `${selectedProd.name} (${selectedProd.shortName})` : (formData.product !== 'Choose a product' ? formData.product : 'General Enquiry');
+      const productName = selectedProd ? selectedProd.name : (formData.product !== 'Choose a product' ? formData.product : 'General Enquiry');
       const subject = encodeURIComponent(`Quote Enquiry: ${productName} - ${formData.name}`);
       const body = encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nProduct: ${productName}\n\nRequirement:\n${formData.requirement}`
@@ -95,7 +95,7 @@ export default function ContactPage() {
               Tell us about your application, required grade or quantity. Our team will connect with you directly.
             </p>
             <div className="direct-details">
-              <a href={`mailto:bentoclaytech@gmail.com?subject=${encodeURIComponent(activeProductName ? `Inquiry for ${activeProductName}` : 'Inquiry for Bentoclay Claytech')}`}>
+              <a href={`mailto:bentoclaytech@gmail.com?subject=${encodeURIComponent(activeProductName ? `Inquiry: ${activeProductName}` : 'Inquiry for Bentoclay Claytech')}`}>
                 <small>EMAIL</small>bentoclaytech@gmail.com
               </a>
               <a href="tel:+917435818628">
@@ -184,7 +184,7 @@ export default function ContactPage() {
                 <option value="Choose a product">Choose a product</option>
                 {products.map((p) => (
                   <option key={p.id} value={p.id}>
-                    {p.name} ({p.shortName})
+                    {p.name}
                   </option>
                 ))}
               </select>

@@ -100,17 +100,17 @@ export default function FloatingActions() {
 
   const whatsappNumber = '917435818628';
   const whatsappText = activeProduct
-    ? `Hello Bentoclay Claytech, I am interested in ${activeProduct.name} (${activeProduct.shortName}) and would like to request technical specifications, pricing, and sample availability.`
+    ? `Hello Bentoclay Claytech, I am interested in ${activeProduct.name} and would like to request technical specifications, pricing, and sample availability.`
     : 'Hello Bentoclay Claytech, I am interested in your attapulgite and bentonite mineral grades and would like to request product details, technical specifications, and pricing.';
   
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappText)}`;
 
   const emailSubject = activeProduct
-    ? `Inquiry for ${activeProduct.name} (${activeProduct.shortName}) - Bentoclay Claytech`
+    ? `Technical Inquiry: ${activeProduct.name}`
     : 'Inquiry from Bentoclay Website - Mineral Grades & Technical Specs';
 
   const emailBody = activeProduct
-    ? `Hello Bentoclay Claytech Team,\n\nI am interested in ${activeProduct.name} (${activeProduct.shortName}).\n\nPlease provide the Product Data Sheet (PDS), Certificate of Analysis (COA), 25 kg trial sample availability, and export pricing per metric ton.\n\nLooking forward to your response.\n\nBest regards,`
+    ? `Hello Bentoclay Claytech Team,\n\nI am interested in ${activeProduct.name}.\n\nPlease provide the Product Data Sheet (PDS), Certificate of Analysis (COA), sample availability, and export pricing per metric ton.\n\nLooking forward to your response.\n\nBest regards,`
     : `Hello Bentoclay Claytech Team,\n\nI am visiting your website and interested in your attapulgite and bentonite mineral grades.\n\nPlease share your technical product catalog, specifications, and quotation details.\n\nLooking forward to your response.\n\nBest regards,`;
 
   const emailUrl = `mailto:bentoclaytech@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
