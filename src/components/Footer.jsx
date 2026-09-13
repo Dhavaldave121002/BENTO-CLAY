@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="footer-about">
           <Link className="brand footer-brand" to="/">
             <img
-              src="/assets/bentoclay-logo.png"
+              src="/assets/bentoclay-logo.webp"
               alt="Bentoclay"
               width="130"
               style={{ height: 'auto' }}

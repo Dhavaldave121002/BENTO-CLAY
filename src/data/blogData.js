@@ -146,7 +146,7 @@ Supplied from Pipavav Port (~135 km) and Mundra Port (~350 km) on Western India'
     category: "Company & Quality",
     badge: "Manufacturing & Quality",
     productId: null,
-    image: "/assets/why-quality-lab.png",
+    image: "/assets/why-quality-lab.webp",
     content: `Located in Bhavnagar, Gujarat—the industrial mineral hub of Western India—Bentoclay Claytech operates state-of-the-art mineral processing works with direct access to high-purity natural attapulgite (palygorskite) reserves.
 
 ### Multi-Stage Advanced Manufacturing Workflow

@@ -30,7 +30,7 @@ export default function WhyUsPage() {
           </div>
           <figure className="page-visual">
             <img
-              src="/assets/why-quality-lab.png"
+              src="/assets/why-quality-lab.webp"
               alt="Attapulgite quality control laboratory bench with viscometer and sample beakers"
             />
           </figure>

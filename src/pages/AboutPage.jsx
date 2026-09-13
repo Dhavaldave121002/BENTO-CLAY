@@ -50,7 +50,7 @@ export default function AboutPage() {
           </div>
           <figure className="page-visual">
             <img
-              src="/assets/about-processing-plant.png"
+              src="/assets/about-processing-plant.webp"
               alt="Modern attapulgite mineral processing plant in Bhavnagar"
             />
           </figure>

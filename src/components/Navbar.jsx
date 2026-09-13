@@ -75,7 +75,7 @@ export default function Navbar() {
         <div className="container nav-wrap">
           <Link to="/" className="brand" aria-label="Bentoclay Claytech home" onClick={closeMenu}>
             <img
-              src="/assets/bentoclay-logo.png"
+              src="/assets/bentoclay-logo.webp"
               alt="Bentoclay Claytech"
               width="110"
               height="auto"

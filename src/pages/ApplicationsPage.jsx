@@ -27,7 +27,7 @@ export default function ApplicationsPage() {
           </div>
           <figure className="page-visual">
             <img
-              src="/assets/applications-industries.png"
+              src="/assets/applications-industries.webp"
               alt="Attapulgite applications across drilling, foundry, coatings and agriculture"
             />
           </figure>
