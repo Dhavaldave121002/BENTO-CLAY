@@ -85,6 +85,32 @@ export default function FloatingActions() {
           </span>
         </a>
 
+        {/* Email Inquiry Option */}
+        <a
+          href="mailto:bentoclayclaytech@gmail.com?subject=Inquiry%20from%20Bentoclay%20Website&body=Hello%20Bentoclay%20Claytech%2C%0A%0AI%20am%20interested%20in%20your%20attapulgite%20minerals%20and%20would%20like%20to%20request%20product%20details%20and%20pricing."
+          className="speed-dial-item item-email"
+          role="menuitem"
+          title="Email: bentoclayclaytech@gmail.com"
+          onClick={() => setIsOpen(false)}
+        >
+          <span className="speed-dial-label">Send Email</span>
+          <span className="speed-dial-icon email-bg" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="2" y="4" width="20" height="16" rx="3" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>
+          </span>
+        </a>
+
         {/* Direct Phone Call Option */}
         <a
           href="tel:+917435818628"

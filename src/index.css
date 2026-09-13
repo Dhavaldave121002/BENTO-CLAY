@@ -4704,6 +4704,17 @@ h2 span {
   box-shadow: 0 8px 24px rgba(37, 211, 102, 0.6);
 }
 
+/* Email Icon Button */
+.email-bg {
+  background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%);
+  box-shadow: 0 6px 20px rgba(234, 67, 53, 0.4);
+}
+
+.speed-dial-item:hover .email-bg {
+  background: linear-gradient(135deg, #d93025 0%, #a51d19 100%);
+  box-shadow: 0 8px 24px rgba(234, 67, 53, 0.55);
+}
+
 /* Call Icon Button */
 .call-bg {
   background: var(--green);
