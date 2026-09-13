@@ -1,23 +1,42 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { products } from '../data/products';
+
+function resolveSelectedProduct(param) {
+  if (!param) return 'Choose a product';
+  const clean = decodeURIComponent(param).trim().toLowerCase();
+
+  const matched = products.find(p =>
+    p.id.toLowerCase() === clean ||
+    p.shortName.toLowerCase() === clean ||
+    p.name.toLowerCase() === clean ||
+    p.slug.toLowerCase() === clean ||
+    p.code.toLowerCase() === clean ||
+    clean.includes(p.shortName.toLowerCase()) ||
+    clean.includes(p.id.toLowerCase()) ||
+    p.name.toLowerCase().includes(clean)
+  );
+
+  return matched ? matched.id : 'Choose a product';
+}
 
 export default function ContactPage() {
   const [searchParams] = useSearchParams();
-  const preGrade = searchParams.get('grade');
+  const queryParam = searchParams.get('grade') || searchParams.get('product') || searchParams.get('id');
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    product: preGrade || 'Choose a product',
+    product: resolveSelectedProduct(queryParam),
     requirement: ''
   });
 
   useEffect(() => {
-    if (preGrade) {
-      setFormData((prev) => ({ ...prev, product: preGrade }));
+    if (queryParam) {
+      setFormData((prev) => ({ ...prev, product: resolveSelectedProduct(queryParam) }));
     }
-  }, [preGrade]);
+  }, [queryParam]);
 
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,9 +56,11 @@ export default function ContactPage() {
       setSubmitted(true);
 
       // Construct mailto link as direct option
-      const subject = encodeURIComponent(`Quote Enquiry: ${formData.product} - ${formData.name}`);
+      const selectedProd = products.find((p) => p.id === formData.product);
+      const productName = selectedProd ? `${selectedProd.name} (${selectedProd.shortName})` : (formData.product !== 'Choose a product' ? formData.product : 'General Enquiry');
+      const subject = encodeURIComponent(`Quote Enquiry: ${productName} - ${formData.name}`);
       const body = encodeURIComponent(
-        `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nProduct: ${formData.product}\n\nRequirement:\n${formData.requirement}`
+        `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nProduct: ${productName}\n\nRequirement:\n${formData.requirement}`
       );
       window.location.href = `mailto:bentoclaytech@gmail.com?subject=${subject}&body=${body}`;
     }, 600);
@@ -136,12 +157,11 @@ export default function ContactPage() {
                 onChange={handleChange}
               >
                 <option value="Choose a product">Choose a product</option>
-                <option value="Salt Gel">Salt Gel Grade</option>
-                <option value="API-13A Sec 12">API-13A Section 12</option>
-                <option value="Natural Powder">Natural Attapulgite Powder</option>
-                <option value="Flux Fine -200">Flux Fine-200</option>
-                <option value="Premium 325">Premium 325</option>
-                <option value="Granules 15 mm">Natural Granules 1–5 mm</option>
+                {products.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} ({p.shortName})
+                  </option>
+                ))}
               </select>
             </label>
 
