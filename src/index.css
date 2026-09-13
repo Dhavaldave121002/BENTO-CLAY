@@ -3007,23 +3007,32 @@ h2 span {
   line-height: 1.7;
 }
 
+.contact-image-card {
+  width: 100%;
+  margin-top: 32px;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(71, 43, 28, 0.12);
+  border: 1px solid rgba(128, 80, 46, 0.12);
+  background: #f8f6f0;
+}
+
+.contact-hero-img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1672 / 941;
+  display: block;
+  object-fit: cover;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: auto;
+}
+
 .direct-details {
-  margin-top: 40px;
+  margin-top: 0;
   display: flex;
   flex-direction: column;
   gap: 17px;
-}
-
-.direct-details:before {
-  content: "";
-  display: block;
-  width: 100%;
-  aspect-ratio: 1672 / 941;
-  height: auto;
-  margin-bottom: 25px;
-  background: url('/assets/contect.webp') center/cover no-repeat;
-  box-shadow: 0 15px 35px rgba(71, 43, 28, 0.12);
-  border-radius: 8px;
 }
 
 .direct-details a {

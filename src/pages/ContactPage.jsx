@@ -94,6 +94,19 @@ export default function ContactPage() {
             <p>
               Tell us about your application, required grade or quantity. Our team will connect with you directly.
             </p>
+
+            <div className="contact-image-card">
+              <img
+                src="/assets/contect.webp"
+                alt="Bentoclay Attapulgite and Bentonite Product Pack"
+                className="contact-hero-img"
+                loading="eager"
+                decoding="async"
+                width="1672"
+                height="941"
+              />
+            </div>
+
             <div className="direct-details">
               <a href={`mailto:bentoclaytech@gmail.com?subject=${encodeURIComponent(activeProductName ? `Inquiry: ${activeProductName}` : 'Inquiry for Bentoclay Claytech')}`}>
                 <small>EMAIL</small>bentoclaytech@gmail.com
