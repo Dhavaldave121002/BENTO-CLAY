@@ -7087,6 +7087,45 @@ h2 span {
   pointer-events: none;
 }
 
+.team-video-section .section-head {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 45px;
+  align-items: flex-end;
+  margin-bottom: 38px;
+}
+
+.team-video-section .section-head h2 {
+  font-size: 38px;
+  line-height: 1.15;
+  letter-spacing: -1.2px;
+  margin-top: 10px;
+  color: var(--ink);
+}
+
+.team-video-section .section-head h2 span {
+  color: var(--terracotta);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.team-video-section .section-head>p {
+  max-width: 100%;
+  font-size: 15.5px;
+  line-height: 1.75;
+  color: #6a574a;
+  margin: 0;
+  padding-bottom: 4px;
+}
+
+@media (max-width: 900px) {
+  .team-video-section .section-head {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    align-items: flex-start;
+  }
+}
+
 .team-video-grid {
   display: grid;
   grid-template-columns: 1fr 1.12fr 1fr;
