@@ -19,13 +19,26 @@ export default function WhyUsPage() {
             <p>
               Processing consists of drying and grinding crude clay to specific particle size distributions with specific ranges of gel viscosity, measured according to the end use.
             </p>
-            <div className="inline-facts">
-              <span>
-                <b><AnimatedCounter target={6} /></b> attapulgite grades
-              </span>
-              <span>
-                <b><AnimatedCounter target={25} suffix=" kg" /></b> HDPE with liner
-              </span>
+            <div className="inline-facts-grid">
+              <div className="fact-badge-card">
+                <div className="fact-num-val">
+                  <AnimatedCounter target={6} />
+                </div>
+                <div className="fact-text-group">
+                  <span className="fact-title">Standard Grades</span>
+                  <span className="fact-sub">Target-controlled attapulgite</span>
+                </div>
+              </div>
+
+              <div className="fact-badge-card">
+                <div className="fact-num-val">
+                  <AnimatedCounter target={25} suffix=" kg" />
+                </div>
+                <div className="fact-text-group">
+                  <span className="fact-title">HDPE Packaging</span>
+                  <span className="fact-sub">Moisture-barrier inner liner</span>
+                </div>
+              </div>
             </div>
           </div>
           <figure className="page-visual">
