@@ -87,10 +87,10 @@ export default function FloatingActions() {
 
         {/* Email Inquiry Option */}
         <a
-          href="mailto:bentoclayclaytech@gmail.com?subject=Inquiry%20from%20Bentoclay%20Website&body=Hello%20Bentoclay%20Claytech%2C%0A%0AI%20am%20interested%20in%20your%20attapulgite%20minerals%20and%20would%20like%20to%20request%20product%20details%20and%20pricing."
+          href="mailto:bentoclaytech@gmail.com?subject=Inquiry%20from%20Bentoclay%20Website&body=Hello%20Bentoclay%20Claytech%2C%0A%0AI%20am%20interested%20in%20your%20attapulgite%20minerals%20and%20would%20like%20to%20request%20product%20details%20and%20pricing."
           className="speed-dial-item item-email"
           role="menuitem"
-          title="Email: bentoclayclaytech@gmail.com"
+          title="Email: bentoclaytech@gmail.com"
           onClick={() => setIsOpen(false)}
         >
           <span className="speed-dial-label">Send Email</span>

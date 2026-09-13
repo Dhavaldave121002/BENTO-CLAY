@@ -41,7 +41,7 @@ export default function ContactPage() {
       const body = encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nProduct: ${formData.product}\n\nRequirement:\n${formData.requirement}`
       );
-      window.location.href = `mailto:bentoclayclaytech@gmail.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:bentoclaytech@gmail.com?subject=${subject}&body=${body}`;
     }, 600);
   };
 

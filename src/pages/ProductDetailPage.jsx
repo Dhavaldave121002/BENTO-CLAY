@@ -101,7 +101,7 @@ export default function ProductDetailPage() {
                   Customize this Grade <span>⚙</span>
                 </button>
                 <a
-                  href={`mailto:bentoclayclaytech@gmail.com?subject=PDS%20Request%3A%20${encodeURIComponent(product.name)}`}
+                  href={`mailto:bentoclaytech@gmail.com?subject=PDS%20Request%3A%20${encodeURIComponent(product.name)}`}
                   className="btn btn-outline-light"
                 >
                   Download PDS <span>↓</span>
@@ -298,10 +298,10 @@ export default function ProductDetailPage() {
                 Send your target parameter, mesh or volume; our Bhavnagar technical engineers confirm grade suitability.
               </p>
               <a
-                href={`mailto:bentoclayclaytech@gmail.com?subject=Technical%20Enquiry%3A%20${encodeURIComponent(product.name)}`}
+                href={`mailto:bentoclaytech@gmail.com?subject=Technical%20Enquiry%3A%20${encodeURIComponent(product.name)}`}
                 className="sidebar-contact-link"
               >
-                ✉ bentoclayclaytech@gmail.com
+                ✉ bentoclaytech@gmail.com
               </a>
               <a href="tel:+917435818628" className="sidebar-phone-link">
                 📞 +91 74358 18628
