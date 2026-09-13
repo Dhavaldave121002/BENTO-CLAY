@@ -1,9 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
+import { products } from '../data/products';
 
 export default function FloatingActions() {
   const [isOpen, setIsOpen] = useState(false);
   const [showTopBtn, setShowTopBtn] = useState(false);
+  const [contactProduct, setContactProduct] = useState(null);
   const containerRef = useRef(null);
+
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
+  // Listen for realtime product changes in Contact form
+  useEffect(() => {
+    const handleProductChange = (e) => {
+      if (e.detail && typeof e.detail.product !== 'undefined') {
+        setContactProduct(e.detail.product);
+      }
+    };
+    window.addEventListener('bentoclay:productChange', handleProductChange);
+    return () => window.removeEventListener('bentoclay:productChange', handleProductChange);
+  }, []);
 
   // Detect scroll to toggle Back to Top visibility
   useEffect(() => {
@@ -44,11 +61,59 @@ export default function FloatingActions() {
     });
   };
 
+  // Determine active product based on URL route or contact dropdown
+  let activeProduct = null;
+  const gradeParam = searchParams.get('grade') || searchParams.get('product') || searchParams.get('id');
+
+  if (location.pathname === '/contact') {
+    const targetKey = (contactProduct !== null && contactProduct !== 'Choose a product')
+      ? contactProduct
+      : gradeParam;
+
+    if (targetKey && targetKey !== 'Choose a product') {
+      const clean = decodeURIComponent(targetKey).trim().toLowerCase();
+      activeProduct = products.find(p =>
+        p.id.toLowerCase() === clean ||
+        p.shortName.toLowerCase() === clean ||
+        p.name.toLowerCase() === clean ||
+        p.slug.toLowerCase() === clean ||
+        p.code.toLowerCase() === clean ||
+        clean.includes(p.shortName.toLowerCase()) ||
+        clean.includes(p.id.toLowerCase()) ||
+        p.name.toLowerCase().includes(clean)
+      );
+    }
+  } else if (location.pathname.startsWith('/products/')) {
+    const slug = location.pathname.replace('/products/', '').split('/')[0].split('#')[0];
+    if (slug) {
+      activeProduct = products.find(p => p.slug === slug || p.id === slug);
+    }
+  } else if (gradeParam) {
+    const clean = decodeURIComponent(gradeParam).trim().toLowerCase();
+    activeProduct = products.find(p =>
+      p.id.toLowerCase() === clean ||
+      p.shortName.toLowerCase() === clean ||
+      p.name.toLowerCase() === clean ||
+      p.slug.toLowerCase() === clean
+    );
+  }
+
   const whatsappNumber = '917435818628';
-  const whatsappMessage = encodeURIComponent(
-    'Hello Bentoclay Claytech, I am interested in your attapulgite grades and would like to request product details and pricing.'
-  );
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+  const whatsappText = activeProduct
+    ? `Hello Bentoclay Claytech, I am interested in ${activeProduct.name} (${activeProduct.shortName}) and would like to request technical specifications, pricing, and sample availability.`
+    : 'Hello Bentoclay Claytech, I am interested in your attapulgite and bentonite mineral grades and would like to request product details, technical specifications, and pricing.';
+  
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappText)}`;
+
+  const emailSubject = activeProduct
+    ? `Inquiry for ${activeProduct.name} (${activeProduct.shortName}) - Bentoclay Claytech`
+    : 'Inquiry from Bentoclay Website - Mineral Grades & Technical Specs';
+
+  const emailBody = activeProduct
+    ? `Hello Bentoclay Claytech Team,\n\nI am interested in ${activeProduct.name} (${activeProduct.shortName}).\n\nPlease provide the Product Data Sheet (PDS), Certificate of Analysis (COA), 25 kg trial sample availability, and export pricing per metric ton.\n\nLooking forward to your response.\n\nBest regards,`
+    : `Hello Bentoclay Claytech Team,\n\nI am visiting your website and interested in your attapulgite and bentonite mineral grades.\n\nPlease share your technical product catalog, specifications, and quotation details.\n\nLooking forward to your response.\n\nBest regards,`;
+
+  const emailUrl = `mailto:bentoclaytech@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
 
   return (
     <aside
@@ -69,10 +134,12 @@ export default function FloatingActions() {
           rel="noopener noreferrer"
           className="speed-dial-item item-whatsapp"
           role="menuitem"
-          title="Chat on WhatsApp"
+          title={activeProduct ? `Chat about ${activeProduct.shortName} on WhatsApp` : "Chat on WhatsApp"}
           onClick={() => setIsOpen(false)}
         >
-          <span className="speed-dial-label">WhatsApp Chat</span>
+          <span className="speed-dial-label">
+            {activeProduct ? `WhatsApp (${activeProduct.shortName})` : 'WhatsApp Chat'}
+          </span>
           <span className="speed-dial-icon whatsapp-bg" aria-hidden="true">
             <svg
               viewBox="0 0 24 24"
@@ -87,13 +154,15 @@ export default function FloatingActions() {
 
         {/* Email Inquiry Option */}
         <a
-          href="mailto:bentoclaytech@gmail.com?subject=Inquiry%20from%20Bentoclay%20Website&body=Hello%20Bentoclay%20Claytech%2C%0A%0AI%20am%20interested%20in%20your%20attapulgite%20minerals%20and%20would%20like%20to%20request%20product%20details%20and%20pricing."
+          href={emailUrl}
           className="speed-dial-item item-email"
           role="menuitem"
-          title="Email: bentoclaytech@gmail.com"
+          title={activeProduct ? `Email inquiry for ${activeProduct.shortName}` : "Email: bentoclaytech@gmail.com"}
           onClick={() => setIsOpen(false)}
         >
-          <span className="speed-dial-label">Send Email</span>
+          <span className="speed-dial-label">
+            {activeProduct ? `Email (${activeProduct.shortName})` : 'Send Email'}
+          </span>
           <span className="speed-dial-icon email-bg" aria-hidden="true">
             <svg
               viewBox="0 0 24 24"
