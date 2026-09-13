@@ -4,9 +4,9 @@ const VIDEO_LIST = [
   {
     id: 'video2',
     stage: 'STAGE 01',
-    pill: 'Raw Sourcing & Sorting',
-    title: 'Mineral Sourcing & Sorting',
-    desc: 'Our field team manages careful ore selection, grading, and uniform crushing before entering the processing circuit.',
+    pill: 'Mine Sourcing & Sorting',
+    title: 'Captive Mine Ore Sourcing & Sorting',
+    desc: 'Careful selection of high-grade mineral strata, selective in-pit excavation, and manual quality sorting directly at our mining lease.',
     src: '/videos/video2.mp4',
     altSrc: '/video2.mp4',
     isFeatured: false,
@@ -16,9 +16,9 @@ const VIDEO_LIST = [
   {
     id: 'video1',
     stage: 'STAGE 02',
-    pill: 'Primary Processing & QC',
-    title: 'Active Plant Operations & Dedicated Team',
-    desc: 'Continuous thermal activation, live parameter testing, and real-time coordination by our technical team to guarantee standard batch rheology.',
+    pill: 'Heavy Excavation & Extraction',
+    title: 'Active Mine Excavation & Earthmoving',
+    desc: 'Continuous heavy excavation, overburden stripping, and high-capacity earthmoving by our mining team to unearth high-purity clay seams.',
     src: '/videos/video1.mp4',
     altSrc: '/video1.mp4',
     isFeatured: true,
@@ -28,9 +28,9 @@ const VIDEO_LIST = [
   {
     id: 'video3',
     stage: 'STAGE 03',
-    pill: 'Milling & Dispatch',
-    title: 'Milling, Packaging & Dispatch',
-    desc: 'Controlled micronizing to exact mesh sizes, followed by mechanized moisture-proof HDPE bagging and export containerization.',
+    pill: 'Haulage & Stockpiling',
+    title: 'Deposit Haulage & Batch Stockpiling',
+    desc: 'Systematic raw material stockpiling, grade-wise batch segregation, and dedicated haulage from the quarry floor to processing facilities.',
     src: '/videos/video3.mp4',
     altSrc: '/video3.mp4',
     isFeatured: false,
@@ -180,14 +180,14 @@ export default function TeamVideoSection() {
         {/* Section Header */}
         <div className="section-head reveal-on-scroll">
           <div>
-            <span className="section-number">OUR TEAM & OPERATIONS</span>
+            <span className="section-number">OUR CAPTIVE MINES & EXTRACTION</span>
             <h2>
-              Behind Every Ton:<br />
-              <span>Our Skilled Team & Plant in Action.</span>
+              Direct From Source:<br />
+              <span>Our Captive Mines & Extraction in Action.</span>
             </h2>
           </div>
           <p>
-            Experience our manufacturing prowess firsthand. Watch our sequential operations from mining extraction to high-precision milling and automated export packaging.
+            Take a direct look at our raw material mining operations. From active mineral deposit excavation to in-pit grading and raw batch haulage, our captive mining sites ensure abundant, consistent, and uninterrupted crude attapulgite and bentonite reserves.
           </p>
         </div>
 
@@ -245,7 +245,7 @@ export default function TeamVideoSection() {
                 {item.isFeatured && (
                   <div className="featured-crown-badge">
                     <span className="star-icon">★</span>
-                    <span>CORE OPERATIONS & TEAM</span>
+                    <span>CORE MINING OPERATIONS</span>
                   </div>
                 )}
 
