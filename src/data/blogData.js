@@ -7,7 +7,7 @@ export const blogArticles = [
     category: "Product Spotlight",
     badge: "Grade Spotlight: Salt Gel",
     productId: "salt-gel",
-    image: "/assets/product-salt-gel.webp",
+    image: "/assets/product-images/Attapulgite Salt Gel Grade Powder.webp",
     content: `Bentoclay Salt Gel Grade is our premier high-viscosity attapulgite clay powder engineered specifically for demanding offshore, coastal, and high-salinity onshore oil & gas drilling operations where electrolytic salinity prevents standard sodium bentonite from hydrating.
 
 ### Why Salt Gel Outperforms Sodium Bentonite in Saline Systems
@@ -39,7 +39,7 @@ Bentoclay Salt Gel utilizes pure needle-like magnesium aluminium phyllosilicate 
     category: "Product Spotlight",
     badge: "Grade Spotlight: API-13A",
     productId: "api-13a",
-    image: "/assets/product-api-13a.webp",
+    image: "/assets/product-images/Attapulgite Powder API-13A Section 12 Grade.webp",
     content: `The American Petroleum Institute (API) Specification 13A Section 12 establishes rigorous physical and rheological parameters for 'Attapulgite / Salt Water Drilling Clay'. Bentoclay API-13A Section 12 Grade powder is manufactured under strict quality assurance protocols to deliver global compliance on every export shipment.
 
 ### Rigorous API Section 12 Compliance & Testing Protocols
@@ -65,7 +65,7 @@ Supplied from Pipavav Port (~135 km) and Mundra Port (~350 km) on Western India'
     category: "Product Spotlight",
     badge: "Grade Spotlight: Premium 325",
     productId: "premium-325",
-    image: "/assets/product-premium-325.webp",
+    image: "/assets/product-images/Attapulgite Premium 325 Powder.webp",
     content: `In modern architectural paints, industrial protective coatings, elastomeric roof mastics, and tape joint compounds, maintaining dense pigments and mineral fillers in permanent colloidal suspension without vertical sagging is critical. Bentoclay Premium 325 delivers inorganic thixotropic perfection.
 
 ### Micronized Engineering: Sub-44 μm (325 Mesh)
@@ -88,7 +88,7 @@ Supplied from Pipavav Port (~135 km) and Mundra Port (~350 km) on Western India'
     category: "Product Spotlight",
     badge: "Grade Spotlight: Flux Fine-200",
     productId: "flux-fine",
-    image: "/assets/product-flux-fine.webp",
+    image: "/assets/product-images/Attapulgite Flux Fine-200 (Foundry Flux) Powder.webp",
     content: `Foundries and steel manufacturing plants require refractory coating washes that keep dense zircon, graphite, olivine, and silica fillers in continuous colloidal suspension without hard caking. Bentoclay Flux Fine-200 is specially milled and refined for high-temperature metallurgical applications.
 
 ### Key Foundry Metallurgical Performance Advantages
@@ -111,7 +111,7 @@ Supplied from Pipavav Port (~135 km) and Mundra Port (~350 km) on Western India'
     category: "Product Spotlight",
     badge: "Grade Spotlight: Natural Powder",
     productId: "natural-powder",
-    image: "/assets/product-natural-powder.webp",
+    image: "/assets/product-images/Attapulgite Natural Powder.webp",
     content: `Modern agrochemical formulators require carrier substrates that can absorb high concentrations of active liquid technicals without clumping, chemical degradation, or loss of flowability. Bentoclay Natural Attapulgite Powder offers natural neutral pH (7.6), high pore volume, and exceptional chemical inertness.
 
 ### Agrochemical, Fertilizer & Feed Formulation Applications
@@ -128,7 +128,7 @@ Supplied from Pipavav Port (~135 km) and Mundra Port (~350 km) on Western India'
     category: "Product Spotlight",
     badge: "Grade Spotlight: Granules (1-5mm)",
     productId: "granules",
-    image: "/assets/product-granules.webp",
+    image: "/assets/product-images/Attapulgite Natural Granules 1 to 5 mm.webp",
     content: `Bentoclay Natural & Calcined Granules (1–5 mm) represent the pinnacle of natural mineral absorption engineering. Unlike traditional swelling bentonite clays that turn into slippery mud when wet, our attapulgite granules maintain solid structural rigidity even when fully saturated.
 
 ### Industrial Spill Cleanup & Premium Pet Care Advantages
