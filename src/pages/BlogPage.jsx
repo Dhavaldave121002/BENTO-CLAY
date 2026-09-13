@@ -75,16 +75,16 @@ export default function BlogPage() {
                   transition: 'transform 0.25s ease, box-shadow 0.25s ease'
                 }}
               >
-                {/* Full-bleed 1:1 Square Edge-to-Edge Cover Image */}
+                {/* Full-bleed 16:10 Landscape Editorial Cover Image */}
                 <Link
                   to={`/blog/${article.slug}`}
                   style={{
                     position: 'relative',
                     display: 'block',
                     width: '100%',
-                    aspectRatio: '1 / 1',
+                    aspectRatio: '16 / 10',
                     overflow: 'hidden',
-                    backgroundColor: '#ffffff',
+                    backgroundColor: '#fbf9f6',
                     borderBottom: '1px solid #ebdccb'
                   }}
                 >
@@ -95,6 +95,7 @@ export default function BlogPage() {
                       width: '100%',
                       height: '100%',
                       objectFit: 'cover',
+                      objectPosition: 'center 25%',
                       display: 'block',
                       transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
                     }}
