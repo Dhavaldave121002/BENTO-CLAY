@@ -3016,10 +3016,10 @@ h2 span {
   content: "";
   display: block;
   width: 100%;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 1672 / 941;
   height: auto;
   margin-bottom: 25px;
-  background: url('/assets/contact-product-pack.webp') center/cover no-repeat;
+  background: url('/assets/contect.webp') center/cover no-repeat;
   box-shadow: 0 15px 35px rgba(71, 43, 28, 0.12);
   border-radius: 8px;
 }
