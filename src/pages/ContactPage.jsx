@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { products } from '../data/products';
+import { FORM_CONFIG } from '../config/formConfig';
 
 function resolveSelectedProduct(param) {
   if (!param) return 'Choose a product';
@@ -50,6 +51,7 @@ export default function ContactPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const selectedProductObj = products.find((p) => p.id === formData.product);
   const activeProductName = selectedProductObj
@@ -61,24 +63,67 @@ export default function ContactPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const triggerMailtoFallback = (productName) => {
+    const subject = encodeURIComponent(`Quote Enquiry: ${productName} - ${formData.name}`);
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nProduct: ${productName}\n\nRequirement:\n${formData.requirement}`
+    );
+    window.location.href = `mailto:${FORM_CONFIG.clientEmail}?subject=${subject}&body=${body}`;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setErrorMessage('');
 
-    // Simulate clean submission handling
+    const selectedProd = products.find((p) => p.id === formData.product);
+    const productName = selectedProd ? selectedProd.name : (formData.product !== 'Choose a product' ? formData.product : 'General Enquiry');
+
+    // If access key is available and configured
+    if (FORM_CONFIG.accessKey && FORM_CONFIG.accessKey !== 'YOUR_ACCESS_KEY_HERE') {
+      try {
+        const response = await fetch(FORM_CONFIG.apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: FORM_CONFIG.accessKey,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            product: productName,
+            message: formData.requirement,
+            subject: `New Bentoclay Quotation Request: ${productName} (${formData.name})`,
+            from_name: 'Bentoclay Claytech Web Enquiry'
+          })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          setIsSubmitting(false);
+          setSubmitted(true);
+          setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            product: 'Choose a product',
+            requirement: ''
+          });
+          return;
+        }
+      } catch (err) {
+        console.warn('Web3Forms API request error, falling back:', err);
+      }
+    }
+
+    // Fallback if key not set or network issue
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
-
-      // Construct mailto link as direct option
-      const selectedProd = products.find((p) => p.id === formData.product);
-      const productName = selectedProd ? selectedProd.name : (formData.product !== 'Choose a product' ? formData.product : 'General Enquiry');
-      const subject = encodeURIComponent(`Quote Enquiry: ${productName} - ${formData.name}`);
-      const body = encodeURIComponent(
-        `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nProduct: ${productName}\n\nRequirement:\n${formData.requirement}`
-      );
-      window.location.href = `mailto:bentoclayclaytech@gmail.com?subject=${subject}&body=${body}`;
-    }, 600);
+      triggerMailtoFallback(productName);
+    }, 500);
   };
 
   return (
