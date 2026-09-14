@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { FORM_CONFIG } from '../config/formConfig';
 
 const GRADE_CUSTOMIZATION_CONFIGS = {
   'salt-gel': {
@@ -402,17 +403,52 @@ export default function GradeCustomizer({ product }) {
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    const subject = `Custom ${product.shortName} Spec Quotation (${effectiveMt} MT): ${specCode} - ${contact.company || contact.name}`;
+    const specDetails = getStructuredSpecText();
+
+    if (FORM_CONFIG.accessKey && FORM_CONFIG.accessKey !== 'YOUR_ACCESS_KEY_HERE') {
+      try {
+        const response = await fetch(FORM_CONFIG.apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: FORM_CONFIG.accessKey,
+            name: contact.name,
+            email: contact.email,
+            phone: contact.phone,
+            company: contact.company || 'N/A',
+            destination_port: contact.destinationPort || 'N/A',
+            product: product.name,
+            spec_code: specCode,
+            quantity_mt: `${effectiveMt} MT`,
+            message: specDetails,
+            subject: subject,
+            from_name: 'Bentoclay Custom Grade Builder'
+          })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          setIsSubmitting(false);
+          setSubmitted(true);
+          return;
+        }
+      } catch (err) {
+        console.warn('Web3Forms submit error, falling back:', err);
+      }
+    }
 
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
-
-      const subject = encodeURIComponent(`Custom ${product.shortName} Spec Quotation (${effectiveMt} MT): ${specCode} - ${contact.company || contact.name}`);
-      const body = encodeURIComponent(getStructuredSpecText());
-      window.location.href = `mailto:bentoclayclaytech@gmail.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:${FORM_CONFIG.clientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(specDetails)}`;
     }, 500);
   };
 

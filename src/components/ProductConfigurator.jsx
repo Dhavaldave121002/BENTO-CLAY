@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { FORM_CONFIG } from '../config/formConfig';
 
 const APPLICATIONS = [
   { id: 'paints', label: 'Paints & Coatings', icon: '🎨', defaultMesh: '325', defaultVisc: 'brookfield', base: 'Premium 325' },
@@ -318,19 +319,50 @@ export default function ProductConfigurator({ preSelectedGrade = null, onInquiry
     );
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    const subject = `Custom Attapulgite Specification: ${specCode} - ${contact.company || contact.name}`;
+    const specDetails = getStructuredSpecText();
+
+    if (FORM_CONFIG.accessKey && FORM_CONFIG.accessKey !== 'YOUR_ACCESS_KEY_HERE') {
+      try {
+        const response = await fetch(FORM_CONFIG.apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: FORM_CONFIG.accessKey,
+            name: contact.name,
+            email: contact.email,
+            phone: contact.phone,
+            company: contact.company || 'N/A',
+            spec_code: specCode,
+            message: specDetails,
+            subject: subject,
+            from_name: 'Bentoclay Online Configurator'
+          })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          setIsSubmitting(false);
+          setSubmitted(true);
+          if (onInquirySent) onInquirySent({ specCode, ...contact });
+          return;
+        }
+      } catch (err) {
+        console.warn('Web3Forms submit error, falling back:', err);
+      }
+    }
 
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
-
-      const subject = encodeURIComponent(`Custom Attapulgite Specification: ${specCode} - ${contact.company || contact.name}`);
-      const body = encodeURIComponent(getStructuredSpecText());
-
-      window.location.href = `mailto:bentoclayclaytech@gmail.com?subject=${subject}&body=${body}`;
-
+      window.location.href = `mailto:${FORM_CONFIG.clientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(specDetails)}`;
       if (onInquirySent) onInquirySent({ specCode, ...contact });
     }, 500);
   };
