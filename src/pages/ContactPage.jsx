@@ -77,7 +77,7 @@ export default function ContactPage() {
       const body = encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nProduct: ${productName}\n\nRequirement:\n${formData.requirement}`
       );
-      window.location.href = `mailto:bentoclaytech@gmail.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:bentoclayclaytech@gmail.com?subject=${subject}&body=${body}`;
     }, 600);
   };
 
@@ -108,8 +108,8 @@ export default function ContactPage() {
             </div>
 
             <div className="direct-details">
-              <a href={`mailto:bentoclaytech@gmail.com?subject=${encodeURIComponent(activeProductName ? `Inquiry: ${activeProductName}` : 'Inquiry for Bentoclay Claytech')}`}>
-                <small>EMAIL</small>bentoclaytech@gmail.com
+              <a href={`mailto:bentoclayclaytech@gmail.com?subject=${encodeURIComponent(activeProductName ? `Inquiry: ${activeProductName}` : 'Inquiry for Bentoclay Claytech')}`}>
+                <small>EMAIL</small>bentoclayclaytech@gmail.com
               </a>
               <a href="tel:+917435818628">
                 <small>PHONE</small>+91 74358 18628

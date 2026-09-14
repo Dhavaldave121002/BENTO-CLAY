@@ -329,7 +329,7 @@ export default function ProductConfigurator({ preSelectedGrade = null, onInquiry
       const subject = encodeURIComponent(`Custom Attapulgite Specification: ${specCode} - ${contact.company || contact.name}`);
       const body = encodeURIComponent(getStructuredSpecText());
 
-      window.location.href = `mailto:bentoclaytech@gmail.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:bentoclayclaytech@gmail.com?subject=${subject}&body=${body}`;
 
       if (onInquirySent) onInquirySent({ specCode, ...contact });
     }, 500);

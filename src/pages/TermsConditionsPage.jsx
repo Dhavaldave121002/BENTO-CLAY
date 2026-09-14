@@ -22,7 +22,7 @@ export default function TermsConditionsPage() {
             </strong>
             <p style={{ margin: 0, fontSize: '14px', color: 'var(--muted)' }}>
               <strong>Bentoclay Claytech</strong> · Plot No. 12/A, GIDC Industrial Estate, Kardej, Bhavnagar – 364004, Gujarat, India.<br />
-              Email: <strong>bentoclaytech@gmail.com</strong> · WhatsApp / Phone: <strong>+91 74358 18628</strong>
+              Email: <strong>bentoclayclaytech@gmail.com</strong> · WhatsApp / Phone: <strong>+91 74358 18628</strong>
             </p>
           </div>
 

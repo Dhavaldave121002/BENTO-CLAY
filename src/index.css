@@ -3560,7 +3560,40 @@ h2 span {
   }
 
   .hero-grid {
-    gap: 65px;
+    gap: 40px;
+  }
+
+  .hero-visual {
+    margin: 24px 0 16px;
+  }
+
+  .floating-tag {
+    width: 84px;
+    height: 84px;
+    right: 8px;
+    top: -24px;
+  }
+
+  .floating-tag strong {
+    font-size: 26px;
+  }
+
+  .floating-tag span {
+    font-size: 8px;
+  }
+
+  .formula-chip {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    margin: 14px 0 0 0;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .hero-copy {
@@ -3718,20 +3751,51 @@ h2 span {
   }
 
   .visual-card {
-    padding: 7px;
+    padding: 6px;
+    border-radius: 12px;
   }
 
   .formula-chip {
-    left: -6px;
-    bottom: 12px;
+    position: relative;
+    left: auto;
+    bottom: auto;
+    margin: 12px 0 0 0;
+    width: 100%;
+    box-sizing: border-box;
     padding: 10px 14px;
+    border-radius: 9px;
+    box-shadow: 0 8px 24px rgba(59, 38, 29, 0.16);
+  }
+
+  .formula-chip small {
+    font-size: 8px;
+    letter-spacing: 1.3px;
+    margin-bottom: 2px;
+  }
+
+  .formula-chip strong {
+    font-size: 13.5px;
+    margin-bottom: 2px;
+  }
+
+  .formula-chip span {
+    font-size: 9.5px;
   }
 
   .floating-tag {
-    width: 82px;
-    height: 82px;
-    right: -5px;
-    top: -40px;
+    width: 72px;
+    height: 72px;
+    right: 6px;
+    top: -20px;
+  }
+
+  .floating-tag strong {
+    font-size: 22px;
+  }
+
+  .floating-tag span {
+    font-size: 7.2px;
+    line-height: 1.15;
   }
 
   .section-pad {
@@ -7596,30 +7660,32 @@ h2 span {
 }
 
 .video-dot-btn.active {
-  background: var(--green);
+  background: var(--gold);
   color: #ffffff;
-  border-color: var(--green);
-  box-shadow: 0 2px 8px rgba(128, 80, 46, 0.25);
+  border-color: var(--gold);
+  box-shadow: 0 4px 14px rgba(184, 121, 54, 0.3);
 }
 
 .video-dot-btn.active .dot-num {
   background: #ffffff;
-  color: var(--green);
+  color: var(--gold);
 }
 
-/* Responsive Mobile Touch Snap Carousel */
+/* Responsive Mobile Touch Snap Carousel: 100% focused single card view */
 @media (max-width: 960px) {
   .team-video-grid {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    gap: 16px;
-    padding: 20px 24px 32px 24px;
-    margin: 20px -24px 0 -24px;
-    width: calc(100% + 48px);
+    gap: 0;
+    padding: 8px 0 16px;
+    margin: 20px auto 0;
+    width: 100%;
+    max-width: 480px;
     scrollbar-width: none;
     align-items: stretch;
+    border-radius: 16px;
   }
 
   .team-video-grid::-webkit-scrollbar {
@@ -7627,11 +7693,14 @@ h2 span {
   }
 
   .team-video-card {
-    flex: 0 0 84%;
-    max-width: 340px;
-    scroll-snap-align: center;
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+    scroll-snap-align: start;
     scroll-snap-stop: always;
+    box-sizing: border-box;
     transform: none !important;
+    border-radius: 16px;
   }
 
   .team-video-card.featured-card {
@@ -7643,12 +7712,16 @@ h2 span {
     font-size: 10px;
     padding: 5px 12px;
   }
+
+  .video-slider-controls {
+    margin: 18px auto 0;
+    gap: 8px;
+  }
 }
 
 @media (max-width: 480px) {
-  .team-video-card {
-    flex: 0 0 88%;
-    max-width: 310px;
+  .team-video-grid {
+    max-width: 100%;
   }
 
   .video-dot-btn .dot-label {
@@ -7656,7 +7729,7 @@ h2 span {
   }
 
   .video-dot-btn {
-    padding: 6px 10px;
+    padding: 6px 12px;
   }
 }
 

@@ -113,7 +113,7 @@ export default function FloatingActions() {
     ? `Hello Bentoclay Claytech Team,\n\nI am interested in ${activeProduct.name}.\n\nPlease provide the Product Data Sheet (PDS), Certificate of Analysis (COA), sample availability, and export pricing per metric ton.\n\nLooking forward to your response.\n\nBest regards,`
     : `Hello Bentoclay Claytech Team,\n\nI am visiting your website and interested in your attapulgite and bentonite mineral grades.\n\nPlease share your technical product catalog, specifications, and quotation details.\n\nLooking forward to your response.\n\nBest regards,`;
 
-  const emailUrl = `mailto:bentoclaytech@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+  const emailUrl = `mailto:bentoclayclaytech@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
 
   return (
     <aside
@@ -155,7 +155,7 @@ export default function FloatingActions() {
           href={emailUrl}
           className="speed-dial-item item-email"
           role="menuitem"
-          title="Email: bentoclaytech@gmail.com"
+          title="Email: bentoclayclaytech@gmail.com"
           onClick={() => setIsOpen(false)}
         >
           <span className="speed-dial-label">Send Email</span>

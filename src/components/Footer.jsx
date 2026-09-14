@@ -61,11 +61,11 @@ export default function Footer() {
 
         <div className="footer-contact">
           <h4>Get in touch</h4>
-          <a className="contact-line" href="mailto:bentoclaytech@gmail.com">
+          <a className="contact-line" href="mailto:bentoclayclaytech@gmail.com">
             <i>✉</i>
             <span>
               <small>EMAIL US</small>
-              bentoclaytech@gmail.com
+              bentoclayclaytech@gmail.com
             </span>
           </a>
           <a className="contact-line" href="tel:+917435818628">

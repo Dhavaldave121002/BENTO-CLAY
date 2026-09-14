@@ -40,7 +40,7 @@ const VIDEO_LIST = [
 ];
 
 export default function TeamVideoSection() {
-  const [activeVideoId, setActiveVideoId] = useState('video1'); // Start with Center Featured Video
+  const [activeVideoId, setActiveVideoId] = useState('video2'); // Start with Stage 01
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [progress, setProgress] = useState({ video1: 0, video2: 0, video3: 0 });
@@ -90,6 +90,44 @@ export default function TeamVideoSection() {
     }
   }, [isMuted, activeVideoId]);
 
+  // Sync active card on mobile swipe/scroll
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    let timeoutId = null;
+    const handleScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        const sliderScrollLeft = slider.scrollLeft;
+        let closestId = activeVideoId;
+        let minDiff = Infinity;
+
+        VIDEO_LIST.forEach((item) => {
+          const cardEl = cardRefs[item.id]?.current;
+          if (cardEl) {
+            const cardLeft = cardEl.offsetLeft - slider.offsetLeft;
+            const diff = Math.abs(cardLeft - sliderScrollLeft);
+            if (diff < minDiff) {
+              minDiff = diff;
+              closestId = item.id;
+            }
+          }
+        });
+
+        if (closestId && closestId !== activeVideoId) {
+          setActiveVideoId(closestId);
+        }
+      }, 80);
+    };
+
+    slider.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      slider.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, [activeVideoId]);
+
   // Handle Video Time Update for Progress Bar
   const handleTimeUpdate = (id) => {
     const vid = videoRefs[id]?.current;
@@ -115,7 +153,7 @@ export default function TeamVideoSection() {
       cardEl.scrollIntoView({
         behavior: 'smooth',
         block: 'nearest',
-        inline: 'center'
+        inline: 'start'
       });
     }
   };
@@ -189,42 +227,6 @@ export default function TeamVideoSection() {
           <p>
             Take a direct look at our raw material mining operations. From active mineral deposit excavation to in-pit grading and raw batch haulage, our captive mining sites ensure abundant, consistent, and uninterrupted crude attapulgite and bentonite reserves.
           </p>
-        </div>
-
-        {/* Carousel Slider Controls for Mobile */}
-        <div className="video-slider-controls">
-          <button
-            type="button"
-            className="video-nav-arrow arrow-prev"
-            onClick={handlePrev}
-            aria-label="Previous Video"
-            title="Previous Video"
-          >
-            ‹
-          </button>
-          <div className="video-dots-row">
-            {VIDEO_LIST.map((item, idx) => (
-              <button
-                key={item.id}
-                type="button"
-                className={`video-dot-btn ${activeVideoId === item.id ? 'active' : ''}`}
-                onClick={() => scrollToCard(item.id)}
-                aria-label={`Slide to Stage ${idx + 1}`}
-              >
-                <span className="dot-num">{idx + 1}</span>
-                <span className="dot-label">{item.pill}</span>
-              </button>
-            ))}
-          </div>
-          <button
-            type="button"
-            className="video-nav-arrow arrow-next"
-            onClick={handleNext}
-            aria-label="Next Video"
-            title="Next Video"
-          >
-            ›
-          </button>
         </div>
 
         {/* 9:16 Video Grid / Mobile Horizontal Swipe Carousel */}
@@ -353,6 +355,42 @@ export default function TeamVideoSection() {
               </div>
             );
           })}
+        </div>
+
+        {/* Carousel Slider Controls positioned below Video Cards */}
+        <div className="video-slider-controls">
+          <button
+            type="button"
+            className="video-nav-arrow arrow-prev"
+            onClick={handlePrev}
+            aria-label="Previous Video"
+            title="Previous Video"
+          >
+            ‹
+          </button>
+          <div className="video-dots-row">
+            {VIDEO_LIST.map((item, idx) => (
+              <button
+                key={item.id}
+                type="button"
+                className={`video-dot-btn ${activeVideoId === item.id ? 'active' : ''}`}
+                onClick={() => scrollToCard(item.id)}
+                aria-label={`Slide to Stage ${idx + 1}`}
+              >
+                <span className="dot-num">{idx + 1}</span>
+                <span className="dot-label">{item.pill}</span>
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="video-nav-arrow arrow-next"
+            onClick={handleNext}
+            aria-label="Next Video"
+            title="Next Video"
+          >
+            ›
+          </button>
         </div>
       </div>
 

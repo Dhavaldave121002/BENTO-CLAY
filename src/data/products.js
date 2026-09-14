@@ -694,7 +694,7 @@ export const products = [
     "id": "granules",
     "slug": "attapulgite-natural-granules-1-5mm",
     "name": "Attapulgite Natural Granules 1 to 5 mm",
-    "shortName": "Granules 15 mm",
+    "shortName": "Granules 1–5 mm",
     "eyebrow": "Attapulgite Natural Granules 1 to 5 mm",
     "code": "NG",
     "type": "Natural Grade",
@@ -789,7 +789,7 @@ export const products = [
     "highlights": [
       {
         "label": "Granule Sizing",
-        "value": "15 mm ball granules"
+        "value": "1 to 5 mm ball granules"
       },
       {
         "label": "Moisture",
@@ -805,7 +805,7 @@ export const products = [
       }
     ],
     "tags": [
-      "Granule Sizing: 15 mm ball granules",
+      "Granule Sizing: 1 to 5 mm ball granules",
       "Moisture: 5.6% (5-10% max)",
       "Specific Gravity: 2.46"
     ],

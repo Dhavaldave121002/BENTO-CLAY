@@ -412,7 +412,7 @@ export default function GradeCustomizer({ product }) {
 
       const subject = encodeURIComponent(`Custom ${product.shortName} Spec Quotation (${effectiveMt} MT): ${specCode} - ${contact.company || contact.name}`);
       const body = encodeURIComponent(getStructuredSpecText());
-      window.location.href = `mailto:bentoclaytech@gmail.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:bentoclayclaytech@gmail.com?subject=${subject}&body=${body}`;
     }, 500);
   };
 
