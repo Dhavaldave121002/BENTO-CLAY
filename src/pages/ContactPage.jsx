@@ -95,11 +95,14 @@ export default function ContactPage() {
           from_name: 'Bentoclay Claytech Web Enquiry'
         };
 
+        if (directLinks.cleanPhone && directLinks.cleanPhone !== 'Not provided') {
+          payload["📱 Client Mobile Number"] = formData.phone;
+        }
         if (directLinks.callUrl) {
-          payload["⚡ Direct Call (Click to Call)"] = directLinks.callUrl;
+          payload["📞 Click to Call (Direct Dial)"] = directLinks.callUrl;
         }
         if (directLinks.whatsappUrl) {
-          payload["⚡ Direct WhatsApp (Click to Chat)"] = directLinks.whatsappUrl;
+          payload["💬 Click to WhatsApp (Direct Chat)"] = directLinks.whatsappUrl;
         }
 
         const response = await fetch(FORM_CONFIG.apiUrl, {
