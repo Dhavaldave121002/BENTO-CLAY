@@ -350,10 +350,10 @@ export default function ProductConfigurator({ preSelectedGrade = null, onInquiry
         };
 
         if (directLinks.callUrl) {
-          payload["⚡ Call Client (1-Click)"] = directLinks.callButtonHtml;
+          payload["⚡ Direct Call (Click to Call)"] = directLinks.callUrl;
         }
         if (directLinks.whatsappUrl) {
-          payload["⚡ WhatsApp Client (1-Click)"] = directLinks.whatsappButtonHtml;
+          payload["⚡ Direct WhatsApp (Click to Chat)"] = directLinks.whatsappUrl;
         }
 
         const response = await fetch(FORM_CONFIG.apiUrl, {
