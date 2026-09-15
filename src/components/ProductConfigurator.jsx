@@ -315,7 +315,6 @@ export default function ProductConfigurator({ preSelectedGrade = null, onInquiry
       `• Discharge Port / City: ${contact.destination || 'Not specified'}\n` +
       (contact.notes ? `• Special Requirements: ${contact.notes}\n` : '') +
       `-----------------------------------------\n` +
-      (contact.phone ? `⚡ DIRECT 1-CLICK CLIENT ACTIONS:\n📞 Call Client: ${getDirectContactLinks(contact.phone).callUrl}\n💬 WhatsApp Client: ${getDirectContactLinks(contact.phone).whatsappUrl}\n-----------------------------------------\n` : '') +
       `Sent via Bentoclay Claytech Online Configurator`
     );
   };
@@ -330,33 +329,40 @@ export default function ProductConfigurator({ preSelectedGrade = null, onInquiry
 
     if (FORM_CONFIG.accessKey && FORM_CONFIG.accessKey !== 'YOUR_ACCESS_KEY_HERE') {
       try {
+        const payload = {
+          access_key: FORM_CONFIG.accessKey,
+          name: contact.name,
+          email: contact.email,
+          phone: contact.phone,
+          company: contact.company || 'N/A',
+          country: contact.country || 'India (Domestic)',
+          destination_port: contact.destination ? `${contact.destination} (${contact.country})` : (contact.country || 'N/A'),
+          application: currentApp.label,
+          spec_code: specCode,
+          quantity_mt: `${effectiveMt} MT`,
+          total_bags: `${totalBags.toLocaleString()} bags (${currentPackaging.label})`,
+          pallets: `${totalPallets} pallets`,
+          containers: `${totalContainers} x 20ft FCL`,
+          notes: contact.notes || 'None',
+          message: specDetails,
+          subject: subject,
+          from_name: 'Bentoclay Online Configurator'
+        };
+
+        if (directLinks.callUrl) {
+          payload["⚡ Call Client (1-Click)"] = directLinks.callButtonHtml;
+        }
+        if (directLinks.whatsappUrl) {
+          payload["⚡ WhatsApp Client (1-Click)"] = directLinks.whatsappButtonHtml;
+        }
+
         const response = await fetch(FORM_CONFIG.apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          body: JSON.stringify({
-            access_key: FORM_CONFIG.accessKey,
-            name: contact.name,
-            email: contact.email,
-            phone: contact.phone,
-            call_client: directLinks.callUrl || 'N/A',
-            whatsapp_client: directLinks.whatsappUrl || 'N/A',
-            company: contact.company || 'N/A',
-            country: contact.country || 'India (Domestic)',
-            destination_port: contact.destination ? `${contact.destination} (${contact.country})` : (contact.country || 'N/A'),
-            application: currentApp.label,
-            spec_code: specCode,
-            quantity_mt: `${effectiveMt} MT`,
-            total_bags: `${totalBags.toLocaleString()} bags (${currentPackaging.label})`,
-            pallets: `${totalPallets} pallets`,
-            containers: `${totalContainers} x 20ft FCL`,
-            notes: contact.notes || 'None',
-            message: specDetails,
-            subject: subject,
-            from_name: 'Bentoclay Online Configurator'
-          })
+          body: JSON.stringify(payload)
         });
 
         const result = await response.json();

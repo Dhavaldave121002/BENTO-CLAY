@@ -84,24 +84,31 @@ export default function ContactPage() {
     // If access key is available and configured
     if (FORM_CONFIG.accessKey && FORM_CONFIG.accessKey !== 'YOUR_ACCESS_KEY_HERE') {
       try {
+        const payload = {
+          access_key: FORM_CONFIG.accessKey,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          product: productName,
+          message: formData.requirement || 'General inquiry / No message provided.',
+          subject: `New Bentoclay Quotation Request: ${productName} (${formData.name})`,
+          from_name: 'Bentoclay Claytech Web Enquiry'
+        };
+
+        if (directLinks.callUrl) {
+          payload["⚡ Call Client (1-Click)"] = directLinks.callButtonHtml;
+        }
+        if (directLinks.whatsappUrl) {
+          payload["⚡ WhatsApp Client (1-Click)"] = directLinks.whatsappButtonHtml;
+        }
+
         const response = await fetch(FORM_CONFIG.apiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          body: JSON.stringify({
-            access_key: FORM_CONFIG.accessKey,
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            product: productName,
-            message: `${formData.requirement || 'No specific note provided.'}${directLinks.summaryText}`,
-            call_client: directLinks.callUrl || 'N/A',
-            whatsapp_client: directLinks.whatsappUrl || 'N/A',
-            subject: `New Bentoclay Quotation Request: ${productName} (${formData.name})`,
-            from_name: 'Bentoclay Claytech Web Enquiry'
-          })
+          body: JSON.stringify(payload)
         });
 
         const result = await response.json();

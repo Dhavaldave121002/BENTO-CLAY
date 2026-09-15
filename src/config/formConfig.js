@@ -8,8 +8,8 @@ export const FORM_CONFIG = {
 };
 
 /**
- * Helper to generate direct 1-click Call and WhatsApp links for client phone numbers.
- * When received in email (Web3Forms/mailto), the admin can directly click to call or chat.
+ * Helper to generate direct 1-click Call and WhatsApp links/buttons for client phone numbers.
+ * Formats clean single-instance action buttons for email inboxes.
  */
 export const getDirectContactLinks = (phone) => {
   if (!phone || !String(phone).trim()) {
@@ -17,6 +17,8 @@ export const getDirectContactLinks = (phone) => {
       cleanPhone: 'Not provided',
       callUrl: '',
       whatsappUrl: '',
+      callButtonHtml: '',
+      whatsappButtonHtml: '',
       summaryText: ''
     };
   }
@@ -29,6 +31,8 @@ export const getDirectContactLinks = (phone) => {
       cleanPhone: raw,
       callUrl: '',
       whatsappUrl: '',
+      callButtonHtml: '',
+      whatsappButtonHtml: '',
       summaryText: ''
     };
   }
@@ -46,9 +50,14 @@ export const getDirectContactLinks = (phone) => {
   }
   const whatsappUrl = `https://wa.me/${waNumber}`;
 
+  // Styled email buttons for Web3Forms HTML emails
+  const callButtonHtml = `<a href="${callUrl}" style="display:inline-block;padding:8px 18px;background-color:#0284c7;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:bold;font-size:14px;">📞 Call ${cleanCall}</a> &nbsp; (${callUrl})`;
+
+  const whatsappButtonHtml = `<a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:8px 18px;background-color:#16a34a;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:bold;font-size:14px;">💬 WhatsApp Chat</a> &nbsp; (${whatsappUrl})`;
+
   const summaryText =
     `\n\n-----------------------------------------\n` +
-    `⚡ DIRECT 1-CLICK CLIENT ACTIONS:\n` +
+    `⚡ 1-CLICK CLIENT ACTIONS:\n` +
     `📞 Call Client: ${callUrl}\n` +
     `💬 WhatsApp Client: ${whatsappUrl}\n` +
     `-----------------------------------------`;
@@ -57,7 +66,10 @@ export const getDirectContactLinks = (phone) => {
     cleanPhone: cleanCall,
     callUrl,
     whatsappUrl,
+    callButtonHtml,
+    whatsappButtonHtml,
     summaryText
   };
 };
+
 
