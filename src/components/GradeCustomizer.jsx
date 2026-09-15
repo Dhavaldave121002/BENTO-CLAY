@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { FORM_CONFIG } from '../config/formConfig';
+import { FORM_CONFIG, getDirectContactLinks } from '../config/formConfig';
 
 const GRADE_CUSTOMIZATION_CONFIGS = {
   'salt-gel': {
@@ -399,6 +399,7 @@ export default function GradeCustomizer({ product }) {
       `• Discharge Port / City: ${contact.destination || 'Not provided'}\n` +
       (contact.notes ? `• Specific Instructions: ${contact.notes}\n` : '') +
       `-----------------------------------------\n` +
+      (contact.phone ? `⚡ DIRECT 1-CLICK CLIENT ACTIONS:\n📞 Call Client: ${getDirectContactLinks(contact.phone).callUrl}\n💬 WhatsApp Client: ${getDirectContactLinks(contact.phone).whatsappUrl}\n-----------------------------------------\n` : '') +
       `Sent from Bentoclay Claytech ${product.shortName} Spec Builder`
     );
   };
@@ -409,6 +410,7 @@ export default function GradeCustomizer({ product }) {
 
     const subject = `Custom ${product.shortName} Spec Quotation (${effectiveMt} MT): ${specCode} - ${contact.company || contact.name}`;
     const specDetails = getStructuredSpecText();
+    const directLinks = getDirectContactLinks(contact.phone);
 
     if (FORM_CONFIG.accessKey && FORM_CONFIG.accessKey !== 'YOUR_ACCESS_KEY_HERE') {
       try {
@@ -423,6 +425,8 @@ export default function GradeCustomizer({ product }) {
             name: contact.name,
             email: contact.email,
             phone: contact.phone,
+            call_client: directLinks.callUrl || 'N/A',
+            whatsapp_client: directLinks.whatsappUrl || 'N/A',
             company: contact.company || 'N/A',
             country: contact.country || 'India (Domestic)',
             destination_port: contact.destination ? `${contact.destination} (${contact.country})` : (contact.country || 'N/A'),

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { products } from '../data/products';
-import { FORM_CONFIG } from '../config/formConfig';
+import { FORM_CONFIG, getDirectContactLinks } from '../config/formConfig';
 
 function resolveSelectedProduct(param) {
   if (!param) return 'Choose a product';
@@ -64,9 +64,10 @@ export default function ContactPage() {
   };
 
   const triggerMailtoFallback = (productName) => {
+    const directLinks = getDirectContactLinks(formData.phone);
     const subject = encodeURIComponent(`Quote Enquiry: ${productName} - ${formData.name}`);
     const body = encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nProduct: ${productName}\n\nRequirement:\n${formData.requirement}`
+      `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nProduct: ${productName}\n\nRequirement:\n${formData.requirement}${directLinks.summaryText}`
     );
     window.location.href = `mailto:${FORM_CONFIG.clientEmail}?subject=${subject}&body=${body}`;
   };
@@ -78,6 +79,7 @@ export default function ContactPage() {
 
     const selectedProd = products.find((p) => p.id === formData.product);
     const productName = selectedProd ? selectedProd.name : (formData.product !== 'Choose a product' ? formData.product : 'General Enquiry');
+    const directLinks = getDirectContactLinks(formData.phone);
 
     // If access key is available and configured
     if (FORM_CONFIG.accessKey && FORM_CONFIG.accessKey !== 'YOUR_ACCESS_KEY_HERE') {
@@ -94,7 +96,9 @@ export default function ContactPage() {
             email: formData.email,
             phone: formData.phone,
             product: productName,
-            message: formData.requirement,
+            message: `${formData.requirement || 'No specific note provided.'}${directLinks.summaryText}`,
+            call_client: directLinks.callUrl || 'N/A',
+            whatsapp_client: directLinks.whatsappUrl || 'N/A',
             subject: `New Bentoclay Quotation Request: ${productName} (${formData.name})`,
             from_name: 'Bentoclay Claytech Web Enquiry'
           })

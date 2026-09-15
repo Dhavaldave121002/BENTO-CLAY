@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { FORM_CONFIG } from '../config/formConfig';
+import { FORM_CONFIG, getDirectContactLinks } from '../config/formConfig';
 
 const APPLICATIONS = [
   { id: 'paints', label: 'Paints & Coatings', icon: '🎨', defaultMesh: '325', defaultVisc: 'brookfield', base: 'Premium 325' },
@@ -315,6 +315,7 @@ export default function ProductConfigurator({ preSelectedGrade = null, onInquiry
       `• Discharge Port / City: ${contact.destination || 'Not specified'}\n` +
       (contact.notes ? `• Special Requirements: ${contact.notes}\n` : '') +
       `-----------------------------------------\n` +
+      (contact.phone ? `⚡ DIRECT 1-CLICK CLIENT ACTIONS:\n📞 Call Client: ${getDirectContactLinks(contact.phone).callUrl}\n💬 WhatsApp Client: ${getDirectContactLinks(contact.phone).whatsappUrl}\n-----------------------------------------\n` : '') +
       `Sent via Bentoclay Claytech Online Configurator`
     );
   };
@@ -325,6 +326,7 @@ export default function ProductConfigurator({ preSelectedGrade = null, onInquiry
 
     const subject = `Custom Attapulgite Specification: ${specCode} - ${contact.company || contact.name}`;
     const specDetails = getStructuredSpecText();
+    const directLinks = getDirectContactLinks(contact.phone);
 
     if (FORM_CONFIG.accessKey && FORM_CONFIG.accessKey !== 'YOUR_ACCESS_KEY_HERE') {
       try {
@@ -339,6 +341,8 @@ export default function ProductConfigurator({ preSelectedGrade = null, onInquiry
             name: contact.name,
             email: contact.email,
             phone: contact.phone,
+            call_client: directLinks.callUrl || 'N/A',
+            whatsapp_client: directLinks.whatsappUrl || 'N/A',
             company: contact.company || 'N/A',
             country: contact.country || 'India (Domestic)',
             destination_port: contact.destination ? `${contact.destination} (${contact.country})` : (contact.country || 'N/A'),

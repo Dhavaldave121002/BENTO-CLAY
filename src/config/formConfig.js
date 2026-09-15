@@ -6,3 +6,58 @@ export const FORM_CONFIG = {
   clientEmail: 'bentoclayclaytech@gmail.com',
   apiUrl: 'https://api.web3forms.com/submit'
 };
+
+/**
+ * Helper to generate direct 1-click Call and WhatsApp links for client phone numbers.
+ * When received in email (Web3Forms/mailto), the admin can directly click to call or chat.
+ */
+export const getDirectContactLinks = (phone) => {
+  if (!phone || !String(phone).trim()) {
+    return {
+      cleanPhone: 'Not provided',
+      callUrl: '',
+      whatsappUrl: '',
+      summaryText: ''
+    };
+  }
+
+  const raw = String(phone).trim();
+  const digitsOnly = raw.replace(/\D/g, '');
+
+  if (!digitsOnly) {
+    return {
+      cleanPhone: raw,
+      callUrl: '',
+      whatsappUrl: '',
+      summaryText: ''
+    };
+  }
+
+  // Determine Call URL
+  const cleanCall = raw.startsWith('+') ? `+${digitsOnly}` : (digitsOnly.length === 10 ? `+91${digitsOnly}` : `+${digitsOnly}`);
+  const callUrl = `tel:${cleanCall}`;
+
+  // Determine WhatsApp URL (wa.me accepts standard country code without + or leading zeros)
+  let waNumber = digitsOnly;
+  if (waNumber.length === 10) {
+    waNumber = `91${waNumber}`;
+  } else if (waNumber.length === 11 && waNumber.startsWith('0')) {
+    waNumber = `91${waNumber.slice(1)}`;
+  }
+  const whatsappUrl = `https://wa.me/${waNumber}`;
+
+  const summaryText =
+    `\n\n-----------------------------------------\n` +
+    `⚡ DIRECT 1-CLICK CLIENT ACTIONS:\n` +
+    `📞 Call Client: ${callUrl}\n` +
+    `💬 WhatsApp Client: ${whatsappUrl}\n` +
+    `-----------------------------------------`;
+
+  return {
+    cleanPhone: cleanCall,
+    callUrl,
+    whatsappUrl,
+    summaryText
+  };
+};
+
